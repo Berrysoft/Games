@@ -273,13 +273,13 @@ Class MainWindow
             Center = c
             Return True
         End Function
-        Public Function MoveLeft(cells(,) As Boolean) As Boolean
-            Dim c = Center + GoLeft
+        Public Function MoveLeft(cells(,) As Boolean, Optional time As Integer = 1) As Boolean
+            Dim c = Center + GoLeft * time
             For Each p In Points
                 Dim rp As Point = c + p
                 Dim x As Integer = rp.X \ TIMES
                 Dim y As Integer = rp.Y \ TIMES
-                If x < 0 OrElse (y > 0 AndAlso cells(x, y)) Then
+                If x < 0 OrElse x >= MAX_WIDTH \ TIMES OrElse (y > 0 AndAlso cells(x, y)) Then
                     Return False
                 End If
             Next
@@ -300,7 +300,7 @@ Class MainWindow
                         Return Me
                     End If
                 ElseIf x >= MAX_WIDTH \ TIMES Then
-                    If pp.MoveLeft(cells) Then
+                    If pp.MoveLeft(cells) OrElse pp.MoveLeft(cells, 2) Then
                         Return pp
                     Else
                         Return Me
