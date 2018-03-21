@@ -1,0 +1,52 @@
+﻿<Window x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
+        xmlns:local="clr-namespace:Snake"
+        mc:Ignorable="d"
+        Title="贪吃蛇" Height="400" Width="400" ResizeMode="CanMinimize" input:InputMethod.IsInputMethodEnabled="False">
+    <Window.Resources>
+        <local:DirectionCommand x:Key="Left" Direction="Left"/>
+        <local:DirectionCommand x:Key="Top" Direction="Top"/>
+        <local:DirectionCommand x:Key="Right" Direction="Right"/>
+        <local:DirectionCommand x:Key="Bottom" Direction="Bottom"/>
+        <local:DirectionCommand x:Key="Left2" Direction="Left"/>
+        <local:DirectionCommand x:Key="Top2" Direction="Top"/>
+        <local:DirectionCommand x:Key="Right2" Direction="Right"/>
+        <local:DirectionCommand x:Key="Bottom2" Direction="Bottom"/>
+        <RoutedUICommand x:Key="Pause" Text="Pause"/>
+        <RoutedUICommand x:Key="Restart" Text="Restart"/>
+        <RoutedUICommand x:Key="Restart2" Text="RestartWithTwoPeople"/>
+        <RoutedUICommand x:Key="Restart3" Text="RestartWithTwoCompete"/>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource Left}" Executed="Turn_Executed"/>
+        <CommandBinding Command="{StaticResource Top}" Executed="Turn_Executed"/>
+        <CommandBinding Command="{StaticResource Right}" Executed="Turn_Executed"/>
+        <CommandBinding Command="{StaticResource Bottom}" Executed="Turn_Executed"/>
+        <CommandBinding Command="{StaticResource Left2}" Executed="Turn_Executed2"/>
+        <CommandBinding Command="{StaticResource Top2}" Executed="Turn_Executed2"/>
+        <CommandBinding Command="{StaticResource Right2}" Executed="Turn_Executed2"/>
+        <CommandBinding Command="{StaticResource Bottom2}" Executed="Turn_Executed2"/>
+        <CommandBinding Command="{StaticResource Pause}" Executed="Pause_Executed"/>
+        <CommandBinding Command="{StaticResource Restart}" Executed="Restart"/>
+        <CommandBinding Command="{StaticResource Restart2}" Executed="InitGame2"/>
+        <CommandBinding Command="{StaticResource Restart3}" Executed="InitGame3"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Command="{StaticResource Left}" Gesture="Left"/>
+        <KeyBinding Command="{StaticResource Top}" Gesture="Up"/>
+        <KeyBinding Command="{StaticResource Right}" Gesture="Right"/>
+        <KeyBinding Command="{StaticResource Bottom}" Gesture="Down"/>
+        <KeyBinding Command="{StaticResource Left2}" Key="A"/>
+        <KeyBinding Command="{StaticResource Top2}" Key="W"/>
+        <KeyBinding Command="{StaticResource Right2}" Key="D"/>
+        <KeyBinding Command="{StaticResource Bottom2}" Key="S"/>
+        <KeyBinding Command="{StaticResource Pause}" Gesture="Esc"/>
+        <KeyBinding Command="{StaticResource Restart}" Gesture="F5"/>
+        <KeyBinding Command="{StaticResource Restart2}" Gesture="F6"/>
+        <KeyBinding Command="{StaticResource Restart3}" Gesture="F7"/>
+    </Window.InputBindings>
+</Window>
