@@ -5,3 +5,5 @@ Remake some games.
 
 ## Snake
 贪吃蛇，F5为单人游戏，F6为双人游戏，F7为双人竞争游戏。
+
+## Square
