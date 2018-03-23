@@ -83,7 +83,6 @@ Class MainWindow
         RemoveHandler Timer.Tick, AddressOf Timer_Tick2
         RemoveHandler Timer.Tick, AddressOf Timer_Tick3
         AddHandler Timer.Tick, AddressOf Timer_Tick2
-        Me.Title = GetTitle2()
         dir = Direction.Right
         dir2 = Direction.Right
         front = New Point(10 * TIMES, 12 * TIMES)
@@ -98,6 +97,7 @@ Class MainWindow
         snake2.Enqueue(front2)
         front2.X += TIMES
         snake2.Enqueue(front2)
+        Me.Title = GetTitle2()
         CreateFood(snake, food)
         CreateFood(snake2, food2)
         Timer.Start()
@@ -111,7 +111,6 @@ Class MainWindow
         RemoveHandler Timer.Tick, AddressOf Timer_Tick2
         RemoveHandler Timer.Tick, AddressOf Timer_Tick3
         AddHandler Timer.Tick, AddressOf Timer_Tick3
-        Me.Title = GetTitle2()
         dir = Direction.Right
         dir2 = Direction.Right
         front = New Point(10 * TIMES, 12 * TIMES)
@@ -126,6 +125,7 @@ Class MainWindow
         snake2.Enqueue(front2)
         front2.X += TIMES
         snake2.Enqueue(front2)
+        Me.Title = GetTitle2()
         CreateFood3(snake, snake2, food)
         Timer.Start()
     End Sub
@@ -176,11 +176,7 @@ Class MainWindow
     ''' </summary>
     ''' <returns>双人模式应该显示的标题</returns>
     Private Function GetTitle2() As String
-        If snake.Count <= 3 AndAlso snake2.Count <= 3 Then
-            Return CAPTION
-        Else
-            Return String.Format(CAPTION_TWO_SCORE, GetScore(snake), GetScore(snake2))
-        End If
+        Return String.Format(CAPTION_TWO_SCORE, GetScore(snake), GetScore(snake2))
     End Function
     ''' <summary>
     ''' 画蛇（头在前，为了使运动看起来更连贯）
@@ -282,30 +278,7 @@ Class MainWindow
     End Sub
     Private Sub Timer_Tick2(sender As Object, e As EventArgs)
         If dir <> Direction.None AndAlso dir2 <> Direction.None Then
-            Dim f = front
-            Dim f2 = front2
-            GetFrontFromDir(dir, f)
-            directed = True
-            GetFrontFromDir(dir2, f2)
-            directed2 = True
-            If snake.Contains(f) OrElse snake2.Contains(f) Then
-                dir = Direction.None
-                Exit Sub
-            End If
-            If snake2.Contains(f2) OrElse snake.Contains(f2) Then
-                dir2 = Direction.None
-                Exit Sub
-            End If
-            front = f
-            front2 = f2
-            If front = front2 Then
-                dir = Direction.None
-                dir2 = Direction.None
-            End If
-            snake.Dequeue()
-            snake.Enqueue(front)
-            snake2.Dequeue()
-            snake2.Enqueue(front2)
+            SwitchIfOneContainsAnother()
             Dim dc = visual.RenderOpen()
             DrawSnake(dc, snake, front, Body, Head)
             DrawSnake(dc, snake2, front2, Body2, Head2)
@@ -330,30 +303,7 @@ Class MainWindow
     End Sub
     Private Sub Timer_Tick3(sender As Object, e As EventArgs)
         If dir <> Direction.None AndAlso dir2 <> Direction.None Then
-            Dim f = front
-            Dim f2 = front2
-            GetFrontFromDir(dir, f)
-            directed = True
-            GetFrontFromDir(dir2, f2)
-            directed2 = True
-            If snake.Contains(f) OrElse snake2.Contains(f) Then
-                dir = Direction.None
-                Exit Sub
-            End If
-            If snake2.Contains(f2) OrElse snake.Contains(f2) Then
-                dir2 = Direction.None
-                Exit Sub
-            End If
-            front = f
-            front2 = f2
-            If front = front2 Then
-                dir = Direction.None
-                dir2 = Direction.None
-            End If
-            snake.Dequeue()
-            snake.Enqueue(front)
-            snake2.Dequeue()
-            snake2.Enqueue(front2)
+            SwitchIfOneContainsAnother()
             Dim dc = visual.RenderOpen()
             DrawSnake(dc, snake, front, Body, Head)
             DrawSnake(dc, snake2, front2, Body2, Head2)
@@ -397,6 +347,46 @@ Class MainWindow
                     f.Y -= MAX_HEIGHT
                 End If
         End Select
+    End Sub
+    Private Sub SwitchIfOneContainsAnother()
+        Dim f = front
+        Dim f2 = front2
+        GetFrontFromDir(dir, f)
+        directed = True
+        GetFrontFromDir(dir2, f2)
+        directed2 = True
+        If snake.Contains(f) Then
+            dir = Direction.None
+            Exit Sub
+        End If
+        If snake2.Contains(f2) Then
+            dir2 = Direction.None
+            Exit Sub
+        End If
+        If f = f2 Then
+            dir = Direction.None
+            dir2 = Direction.None
+        Else
+            If snake.Contains(f2) Then
+                Do Until snake.Peek() = f2
+                    snake.Dequeue()
+                Loop
+                snake.Dequeue()
+                snake2.Enqueue(f2)
+            ElseIf snake2.Contains(f) Then
+                Do Until snake2.Peek() = f
+                    snake2.Dequeue()
+                Loop
+                snake2.Dequeue()
+                snake.Enqueue(f)
+            End If
+        End If
+        front = f
+        front2 = f2
+        snake.Dequeue()
+        snake.Enqueue(front)
+        snake2.Dequeue()
+        snake2.Enqueue(front2)
     End Sub
     Private Sub Turn_Executed(sender As Object, e As ExecutedRoutedEventArgs)
         If Timer.IsEnabled Then
