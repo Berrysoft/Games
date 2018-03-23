@@ -372,15 +372,19 @@ Class MainWindow
                     snake.Dequeue()
                     snake2.Enqueue(f2)
                 Loop
-                snake.Dequeue()
-                snake2.Enqueue(f2)
+                Do
+                    snake.Dequeue()
+                    snake2.Enqueue(f2)
+                Loop While snake.Peek() = f2
             ElseIf snake2.Contains(f) Then
                 Do Until snake2.Peek() = f
                     snake2.Dequeue()
                     snake.Enqueue(f)
                 Loop
-                snake2.Dequeue()
-                snake.Enqueue(f)
+                Do
+                    snake2.Dequeue()
+                    snake.Enqueue(f)
+                Loop While snake2.Peek() = f
             End If
         End If
         front = f
