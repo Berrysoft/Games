@@ -370,12 +370,14 @@ Class MainWindow
             If snake.Contains(f2) Then
                 Do Until snake.Peek() = f2
                     snake.Dequeue()
+                    snake2.Enqueue(f2)
                 Loop
                 snake.Dequeue()
                 snake2.Enqueue(f2)
             ElseIf snake2.Contains(f) Then
                 Do Until snake2.Peek() = f
                     snake2.Dequeue()
+                    snake.Enqueue(f)
                 Loop
                 snake2.Dequeue()
                 snake.Enqueue(f)
