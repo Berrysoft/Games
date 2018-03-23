@@ -1,10 +1,5 @@
 ﻿Imports System.Windows.Threading
 Class MainWindow
-    Enum GameMode
-        One
-        Two
-        TwoCompete
-    End Enum
 #Region "Constants"
     Private Const TIMES As Integer = 10
     Private Const MAX_WIDTH As Integer = 380
@@ -154,6 +149,12 @@ Class MainWindow
             food.Y = rnd.Next(MAX_HEIGHT / TIMES - 1) * TIMES
         Loop While snake.Contains(food)
     End Sub
+    ''' <summary>
+    ''' 根据两条蛇随机生成食物
+    ''' </summary>
+    ''' <param name="snake"></param>
+    ''' <param name="snake2"></param>
+    ''' <param name="food"></param>
     Private Sub CreateFood3(snake As Queue(Of Point), snake2 As Queue(Of Point), ByRef food As Point)
         Do
             food.X = rnd.Next(MAX_WIDTH / TIMES - 1) * TIMES
@@ -278,7 +279,7 @@ Class MainWindow
     End Sub
     Private Sub Timer_Tick2(sender As Object, e As EventArgs)
         If dir <> Direction.None AndAlso dir2 <> Direction.None Then
-            SwitchIfOneContainsAnother()
+            SwitchIfOneContainsAnother(False)
             Dim dc = visual.RenderOpen()
             DrawSnake(dc, snake, front, Body, Head)
             DrawSnake(dc, snake2, front2, Body2, Head2)
@@ -303,7 +304,7 @@ Class MainWindow
     End Sub
     Private Sub Timer_Tick3(sender As Object, e As EventArgs)
         If dir <> Direction.None AndAlso dir2 <> Direction.None Then
-            SwitchIfOneContainsAnother()
+            SwitchIfOneContainsAnother(True)
             Dim dc = visual.RenderOpen()
             DrawSnake(dc, snake, front, Body, Head)
             DrawSnake(dc, snake2, front2, Body2, Head2)
@@ -348,25 +349,25 @@ Class MainWindow
                 End If
         End Select
     End Sub
-    Private Sub SwitchIfOneContainsAnother()
+    Private Sub SwitchIfOneContainsAnother(compete As Boolean)
         Dim f = front
         Dim f2 = front2
         GetFrontFromDir(dir, f)
         directed = True
         GetFrontFromDir(dir2, f2)
         directed2 = True
-        If snake.Contains(f) Then
+        If snake.Contains(f) OrElse (Not compete AndAlso snake2.Contains(f)) Then
             dir = Direction.None
             Exit Sub
         End If
-        If snake2.Contains(f2) Then
+        If snake2.Contains(f2) OrElse (Not compete AndAlso snake.Contains(f2)) Then
             dir2 = Direction.None
             Exit Sub
         End If
         If f = f2 Then
             dir = Direction.None
             dir2 = Direction.None
-        Else
+        ElseIf compete Then
             If snake.Contains(f2) Then
                 Do Until snake.Peek() = f2
                     snake.Dequeue()
@@ -376,6 +377,7 @@ Class MainWindow
                     snake.Dequeue()
                     snake2.Enqueue(f2)
                 Loop While snake.Peek() = f2
+                Me.Title = GetTitle2()
             ElseIf snake2.Contains(f) Then
                 Do Until snake2.Peek() = f
                     snake2.Dequeue()
@@ -385,6 +387,7 @@ Class MainWindow
                     snake2.Dequeue()
                     snake.Enqueue(f)
                 Loop While snake2.Peek() = f
+                Me.Title = GetTitle2()
             End If
         End If
         front = f
@@ -471,7 +474,24 @@ Class MainWindow
     End Sub
 #End Region
 End Class
-#Region "Direction"
+#Region "GameControl"
+''' <summary>
+''' 游戏模式
+''' </summary>
+Enum GameMode
+    ''' <summary>
+    ''' 单人游戏
+    ''' </summary>
+    One
+    ''' <summary>
+    ''' 双人游戏
+    ''' </summary>
+    Two
+    ''' <summary>
+    ''' 双人竞争游戏
+    ''' </summary>
+    TwoCompete
+End Enum
 ''' <summary>
 ''' 方向
 ''' </summary>
