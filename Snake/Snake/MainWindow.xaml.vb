@@ -378,7 +378,8 @@ Class MainWindow
                     snake2.Enqueue(f2)
                 Loop While snake.Peek() = f2
                 Me.Title = GetTitle2()
-            ElseIf snake2.Contains(f) Then
+            End If
+            If snake2.Contains(f) Then
                 Do Until snake2.Peek() = f
                     snake2.Dequeue()
                     snake.Enqueue(f)
