@@ -6,7 +6,7 @@
         xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="贪吃蛇" Height="400" Width="400" ResizeMode="CanMinimize" input:InputMethod.IsInputMethodEnabled="False">
+        Title="贪吃蛇" Height="400" Width="400" input:InputMethod.IsInputMethodEnabled="False">
     <Window.Resources>
         <local:DirectionCommand x:Key="Left" Direction="Left"/>
         <local:DirectionCommand x:Key="Top" Direction="Top"/>
@@ -31,7 +31,7 @@
         <CommandBinding Command="{StaticResource Right2}" Executed="Turn_Executed2"/>
         <CommandBinding Command="{StaticResource Bottom2}" Executed="Turn_Executed2"/>
         <CommandBinding Command="{StaticResource Pause}" Executed="Pause_Executed"/>
-        <CommandBinding Command="{StaticResource Restart}" Executed="Restart"/>
+        <CommandBinding Command="{StaticResource Restart}" Executed="InitGame"/>
         <CommandBinding Command="{StaticResource Restart2}" Executed="InitGame2"/>
         <CommandBinding Command="{StaticResource Restart3}" Executed="InitGame3"/>
     </Window.CommandBindings>
