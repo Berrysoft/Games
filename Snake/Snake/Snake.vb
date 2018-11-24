@@ -61,7 +61,18 @@
 
     Public Function Contains(value As IntPoint) As Boolean
         If value = Head Then
-            Return body.Skip(1).Contains(value)
+            Dim i As Integer = 0
+            For Each b In body
+                If value = b Then
+                    i += 1
+                Else
+                    Exit For
+                End If
+            Next
+            If i >= body.Count Then
+                Return False
+            End If
+            Return body.Skip(i).Contains(value)
         End If
         Return body.Contains(value)
     End Function
@@ -134,7 +145,7 @@ End Structure
 ''' </summary>
 Enum Direction
     ''' <summary>
-    ''' 停止或未定义
+    ''' 未定义
     ''' </summary>
     None = 0
     ''' <summary>

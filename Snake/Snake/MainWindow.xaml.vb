@@ -10,6 +10,7 @@ Class MainWindow
     Private Const CAPTION_TWO_PAUSE As String = "贪吃蛇 - 绿：{0} 蓝：{1} - 暂停"
     Private Const CAPTION_TWO_ENDED As String = "贪吃蛇 - 绿：{0} 蓝：{1} - 已结束"
     Private Shared ReadOnly NoBorderPen As New Pen(Brushes.Transparent, 0)
+    Private Shared ReadOnly BackgroundBrush As New SolidColorBrush(Color.FromRgb(31, 31, 31))
     Private Shared ReadOnly Body As Brush = Brushes.Green
     Private Shared ReadOnly Head As Brush = Brushes.LightGreen
     Private Shared ReadOnly FoodBrush As Brush = Brushes.Red
@@ -22,6 +23,7 @@ Class MainWindow
     Private realWidth As Double
     Private realHeight As Double
     Private cell As Vector
+    Private off As Vector
     Private WithEvents Timer As New DispatcherTimer()
     Private WithEvents TimerEnded As New DispatcherTimer()
     Private visual As New DrawingVisual
@@ -43,8 +45,8 @@ Class MainWindow
     ''' </summary>
     Private Sub InitGame()
         mode = GameMode.One
-        'Me.Title = GetTitle()
         map.Reset(False, New IntPoint(13, 16))
+        Timer.Start()
     End Sub
     ''' <summary>
     ''' 初始化双人游戏
@@ -52,10 +54,12 @@ Class MainWindow
     Private Sub InitGame2()
         mode = GameMode.Two
         map.Reset(False, New IntPoint(13, 12), New IntPoint(13, 20))
+        Timer.Start()
     End Sub
     Private Sub InitGame3()
         mode = GameMode.TwoCompete
         map.Reset(True, New IntPoint(13, 12), New IntPoint(13, 20))
+        Timer.Start()
     End Sub
 #End Region
 #Region "Game"
@@ -87,9 +91,9 @@ Class MainWindow
     ''' <param name="body"></param>
     ''' <param name="head"></param>
     Private Sub DrawSnake(dc As DrawingContext, snake As Snake, body As Brush, head As Brush)
-        dc.DrawRectangle(head, NoBorderPen, New Rect(snake.Head.ToPoint(times), cell))
+        dc.DrawRectangle(head, NoBorderPen, New Rect(snake.Head.ToPoint(times) + off, cell))
         For Each s In snake.Skip(1)
-            dc.DrawRectangle(body, NoBorderPen, New Rect(s.ToPoint(times), cell))
+            dc.DrawRectangle(body, NoBorderPen, New Rect(s.ToPoint(times) + off, cell))
         Next
     End Sub
     ''' <summary>
@@ -101,9 +105,9 @@ Class MainWindow
     ''' <param name="head"></param>
     Private Sub DrawSnakeWithHeadLast(dc As DrawingContext, snake As Snake, body As Brush, head As Brush)
         For Each s In snake
-            dc.DrawRectangle(body, NoBorderPen, New Rect(s.ToPoint(times), cell))
+            dc.DrawRectangle(body, NoBorderPen, New Rect(s.ToPoint(times) + off, cell))
         Next
-        dc.DrawRectangle(head, NoBorderPen, New Rect(snake.Head.ToPoint(times), cell))
+        dc.DrawRectangle(head, NoBorderPen, New Rect(snake.Head.ToPoint(times) + off, cell))
     End Sub
     ''' <summary>
     ''' 画食物
@@ -112,7 +116,40 @@ Class MainWindow
     ''' <param name="food"></param>
     ''' <param name="brush"></param>
     Private Sub DrawFood(dc As DrawingContext, food As IntPoint, brush As Brush)
-        dc.DrawEllipse(brush, NoBorderPen, food.ToPoint(times) + cell / 2, times / 2, times / 2)
+        dc.DrawEllipse(brush, NoBorderPen, food.ToPoint(times) + cell / 2 + off, times / 2, times / 2)
+    End Sub
+
+    Private Sub DrawBackground(dc As DrawingContext)
+        dc.DrawRectangle(BackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+    End Sub
+
+    Private Sub DrawAllFood(dc As DrawingContext)
+        DrawFood(dc, map.Food(0), FoodBrush)
+        If mode = GameMode.Two Then
+            DrawFood(dc, map.Food(1), FoodBrush2)
+        End If
+    End Sub
+
+    Private Sub DrawAll()
+        Using dc = visual.RenderOpen()
+            DrawBackground(dc)
+            DrawSnake(dc, map.Snake(0), Body, Head)
+            If mode <> GameMode.One Then
+                DrawSnake(dc, map.Snake(1), Body2, Head2)
+            End If
+            DrawAllFood(dc)
+        End Using
+    End Sub
+
+    Private Sub DrawAllWithHeadLast()
+        Using dc = visual.RenderOpen()
+            DrawBackground(dc)
+            DrawSnakeWithHeadLast(dc, map.Snake(0), Body, Head)
+            If mode <> GameMode.One Then
+                DrawSnakeWithHeadLast(dc, map.Snake(1), Body2, Head2)
+            End If
+            DrawAllFood(dc)
+        End Using
     End Sub
 #End Region
 #Region "Overrides"
@@ -147,16 +184,7 @@ Class MainWindow
             Timer.Stop()
             TimerEnded.Start()
         End Try
-        Using dc = visual.RenderOpen()
-            DrawSnake(dc, map.Snake(0), Body, Head)
-            If mode <> GameMode.One Then
-                DrawSnake(dc, map.Snake(1), Body2, Head2)
-            End If
-            DrawFood(dc, map.Food(0), FoodBrush)
-            If mode = GameMode.Two Then
-                DrawFood(dc, map.Food(1), FoodBrush2)
-            End If
-        End Using
+        DrawAll()
         If mode = GameMode.One Then
             Me.Title = GetTitle()
         Else
@@ -181,10 +209,14 @@ Class MainWindow
         End If
     End Sub
     Private Sub Pause_Executed(sender As Object, e As ExecutedRoutedEventArgs)
-        If dir <> Direction.None Then
+        If map.Snake(0).Dir <> Direction.None Then
             If Timer.IsEnabled = True Then
                 Timer.Stop()
-                Me.Title = String.Format(If(mode = GameMode.One, CAPTION_WITH_PAUSE, CAPTION_TWO_PAUSE), map.Snake(0).Score, map.Snake(1).Score)
+                If mode = GameMode.One Then
+                    Me.Title = String.Format(CAPTION_WITH_PAUSE, map.Snake(0).Score)
+                Else
+                    Me.Title = String.Format(CAPTION_TWO_PAUSE, map.Snake(0).Score, map.Snake(1).Score)
+                End If
             Else
                 Timer.Start()
                 Me.Title = GetTitle()
@@ -198,49 +230,33 @@ Class MainWindow
             TimerEnded.Stop()
             shineNumber = 0
         End If
-        Using dc = visual.RenderOpen()
-            If mode <> GameMode.One Then
-                If map.Snake(0).Dir = Direction.None Then
-                    If map.Snake(1).Dir = Direction.None Then
-                        If shineNumber Mod 2 = 0 Then
-                            DrawSnakeWithHeadLast(dc, map.Snake(0), Body, Head)
-                            DrawSnakeWithHeadLast(dc, map.Snake(1), Body2, Head2)
-                        End If
-                    Else
-                        If shineNumber Mod 2 = 0 Then
-                            DrawSnakeWithHeadLast(dc, map.Snake(0), Body, Head)
-                        End If
-                        DrawSnakeWithHeadLast(dc, map.Snake(1), Body2, Head2)
-                    End If
-                Else
-                    If shineNumber Mod 2 = 0 Then
-                        DrawSnakeWithHeadLast(dc, map.Snake(1), Body2, Head2)
-                    End If
-                    DrawSnakeWithHeadLast(dc, map.Snake(0), Body, Head)
-                End If
-                DrawFood(dc, map.Food(0), FoodBrush)
-                If mode = GameMode.Two Then
-                    DrawFood(dc, map.Food(1), FoodBrush2)
-                End If
-            Else
-                If shineNumber Mod 2 = 0 Then
-                    DrawSnakeWithHeadLast(dc, map.Snake(0), Body, Head)
-                End If
-                DrawFood(dc, map.Food(0), FoodBrush)
-            End If
-        End Using
+        If shineNumber Mod 2 = 0 Then
+            DrawAllWithHeadLast()
+        Else
+            Using dc = visual.RenderOpen()
+                DrawBackground(dc)
+                DrawAllFood(dc)
+            End Using
+        End If
     End Sub
 
     Private Sub MainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         InitGame()
-        Timer.Start()
     End Sub
 
     Private Sub MainWindow_SizeChanged(sender As Object, e As SizeChangedEventArgs) Handles Me.SizeChanged
-        times = Math.Min(RenderSize.Width / Map.WIDTH, RenderSize.Height / Map.HEIGHT)
-        realWidth = (Map.WIDTH - 1) * times
-        realHeight = (Map.HEIGHT - 1) * times
+        Dim r = GetClientRect(Me)
+        Dim dpi = VisualTreeHelper.GetDpi(visual)
+        Dim w = (r.Right - r.Left) / dpi.DpiScaleX
+        Dim h = (r.Bottom - r.Top) / dpi.DpiScaleY
+        times = Math.Min(w / Map.WIDTH, h / Map.HEIGHT)
+        realWidth = Map.WIDTH * times
+        realHeight = Map.HEIGHT * times
         cell = New Vector(times, times)
+        off = New Vector((w - realWidth) / 2, (h - realHeight) / 2)
+        If IsLoaded Then
+            DrawAll()
+        End If
     End Sub
 #End Region
 End Class
