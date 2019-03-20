@@ -250,9 +250,7 @@ Class MainWindow
         If shineNumber Mod 2 = 0 Then
             DrawAllWithHeadLast()
         Else
-            Using dc = snakeVisual.RenderOpen()
-                '清除
-            End Using
+            snakeVisual.RenderOpen().Close()
         End If
     End Sub
 

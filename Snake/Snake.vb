@@ -1,4 +1,7 @@
-﻿Class Snake
+﻿Imports System.Runtime.CompilerServices
+Imports GamesHelper
+
+Class Snake
     Implements IEnumerable(Of IntPoint)
 
     Private ReadOnly body As New LinkedList(Of IntPoint)
@@ -86,36 +89,10 @@
     End Function
 End Class
 
-Structure IntPoint
-    Public X As Integer
-    Public Y As Integer
-
-    Public Sub New(x As Integer, y As Integer)
-        Me.X = x
-        Me.Y = y
-    End Sub
-
-    Public Overrides Function Equals(obj As Object) As Boolean
-        If TypeOf obj Is IntPoint Then
-            Return Me = CType(obj, IntPoint)
-        End If
-        Return False
-    End Function
-
-    Public Shared Operator =(p1 As IntPoint, p2 As IntPoint) As Boolean
-        Return p1.X = p2.X AndAlso p1.Y = p2.Y
-    End Operator
-
-    Public Shared Operator <>(p1 As IntPoint, p2 As IntPoint) As Boolean
-        Return Not p1 = p2
-    End Operator
-
-    Public Function ToPoint(times As Double) As Point
-        Return New Point(X * times, Y * times)
-    End Function
-
-    Public Function AddDirection(dir As Direction) As IntPoint
-        Dim result As IntPoint = Me
+Module IntPointHelper
+    <Extension>
+    Public Function AddDirection(p As IntPoint, dir As Direction) As IntPoint
+        Dim result As IntPoint = p
         Select Case dir
             Case Direction.Top
                 result.Y -= 1
@@ -138,7 +115,7 @@ Structure IntPoint
         End If
         Return result
     End Function
-End Structure
+End Module
 
 ''' <summary>
 ''' 方向

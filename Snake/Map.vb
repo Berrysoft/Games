@@ -1,4 +1,6 @@
-﻿Class SnakeEatenException
+﻿Imports GamesHelper
+
+Class SnakeEatenException
     Inherits Exception
 End Class
 

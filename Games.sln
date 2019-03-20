@@ -9,6 +9,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Square", "Square\Square.vbp
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GamesHelper", "GamesHelper\GamesHelper.vbproj", "{9457CC4F-780B-4699-B7BA-69026AA75E27}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Maze", "Maze\Maze.vbproj", "{4535E28F-DAFE-4EC1-9B2C-21DF768F270A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{9457CC4F-780B-4699-B7BA-69026AA75E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9457CC4F-780B-4699-B7BA-69026AA75E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9457CC4F-780B-4699-B7BA-69026AA75E27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4535E28F-DAFE-4EC1-9B2C-21DF768F270A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4535E28F-DAFE-4EC1-9B2C-21DF768F270A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4535E28F-DAFE-4EC1-9B2C-21DF768F270A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4535E28F-DAFE-4EC1-9B2C-21DF768F270A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

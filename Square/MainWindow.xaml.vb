@@ -9,11 +9,11 @@ Class MainWindow
     Private Const CAPTION As String = "{0} - 俄罗斯方块"
     Private Shared ReadOnly NoBorderPen As New Pen(Brushes.Transparent, 0)
     Private Shared ReadOnly BackgroundBrush As New SolidColorBrush(Color.FromRgb(31, 31, 31))
-    Private Shared ReadOnly Cell As New Vector(CELLSIZE, CELLSIZE)
-    Private Shared ReadOnly GoDown As New Vector(0, CELLSIZE)
-    Private Shared ReadOnly GoRight As New Vector(CELLSIZE, 0)
-    Private Shared ReadOnly GoLeft As New Vector(-CELLSIZE, 0)
-    Private Shared ReadOnly Center As New Point(MAX_WIDTH \ 2, -2 * CELLSIZE)
+    Private Shared ReadOnly Cell As New IntPoint(CELLSIZE, CELLSIZE)
+    Private Shared ReadOnly GoDown As New IntPoint(0, CELLSIZE)
+    Private Shared ReadOnly GoRight As New IntPoint(CELLSIZE, 0)
+    Private Shared ReadOnly GoLeft As New IntPoint(-CELLSIZE, 0)
+    Private Shared ReadOnly Center As New IntPoint(MAX_WIDTH \ 2, -2 * CELLSIZE)
     Private Shared ReadOnly Patterns() As Pattern
     Private Shared ReadOnly FillBrush As Brush = Brushes.Green
     Private Shared ReadOnly BorderPen As New Pen(Brushes.Black, 1)
@@ -31,48 +31,48 @@ Class MainWindow
     Private playing As Boolean?
     Shared Sub New()
         '方块
-        Dim s4 As New Pattern(New Vector(0, 0), New Vector(-CELLSIZE, 0), New Vector(-CELLSIZE, -CELLSIZE), New Vector(0, -CELLSIZE))
+        Dim s4 As New Pattern(New IntPoint(0, 0), New IntPoint(-CELLSIZE, 0), New IntPoint(-CELLSIZE, -CELLSIZE), New IntPoint(0, -CELLSIZE))
         s4.NextPattern = s4
         '直线
-        Dim lineh As New Pattern(New Vector(-CELLSIZE, 0), New Vector(0, 0), New Vector(CELLSIZE, 0), New Vector(2 * CELLSIZE, 0))
-        Dim linev As New Pattern(New Vector(0, CELLSIZE), New Vector(0, -2 * CELLSIZE), New Vector(0, -CELLSIZE), New Vector(0, 0))
+        Dim lineh As New Pattern(New IntPoint(-CELLSIZE, 0), New IntPoint(0, 0), New IntPoint(CELLSIZE, 0), New IntPoint(2 * CELLSIZE, 0))
+        Dim linev As New Pattern(New IntPoint(0, CELLSIZE), New IntPoint(0, -2 * CELLSIZE), New IntPoint(0, -CELLSIZE), New IntPoint(0, 0))
         lineh.NextPattern = linev
         linev.NextPattern = lineh
         'L
-        Dim l1 As New Pattern(New Vector(0, CELLSIZE), New Vector(-CELLSIZE, CELLSIZE), New Vector(-CELLSIZE, 0), New Vector(-CELLSIZE, -CELLSIZE))
-        Dim l2 As New Pattern(New Vector(-2 * CELLSIZE, 0), New Vector(0, -CELLSIZE), New Vector(-CELLSIZE, -CELLSIZE), New Vector(-2 * CELLSIZE, -CELLSIZE))
-        Dim l3 As New Pattern(New Vector(-CELLSIZE, -2 * CELLSIZE), New Vector(0, 0), New Vector(0, -CELLSIZE), New Vector(0, -2 * CELLSIZE))
-        Dim l4 As New Pattern(New Vector(-CELLSIZE, 0), New Vector(0, 0), New Vector(CELLSIZE, 0), New Vector(CELLSIZE, -CELLSIZE))
+        Dim l1 As New Pattern(New IntPoint(0, CELLSIZE), New IntPoint(-CELLSIZE, CELLSIZE), New IntPoint(-CELLSIZE, 0), New IntPoint(-CELLSIZE, -CELLSIZE))
+        Dim l2 As New Pattern(New IntPoint(-2 * CELLSIZE, 0), New IntPoint(0, -CELLSIZE), New IntPoint(-CELLSIZE, -CELLSIZE), New IntPoint(-2 * CELLSIZE, -CELLSIZE))
+        Dim l3 As New Pattern(New IntPoint(-CELLSIZE, -2 * CELLSIZE), New IntPoint(0, 0), New IntPoint(0, -CELLSIZE), New IntPoint(0, -2 * CELLSIZE))
+        Dim l4 As New Pattern(New IntPoint(-CELLSIZE, 0), New IntPoint(0, 0), New IntPoint(CELLSIZE, 0), New IntPoint(CELLSIZE, -CELLSIZE))
         l1.NextPattern = l2
         l2.NextPattern = l3
         l3.NextPattern = l4
         l4.NextPattern = l1
         '反L
-        Dim bl1 As New Pattern(New Vector(0, CELLSIZE), New Vector(-CELLSIZE, CELLSIZE), New Vector(0, 0), New Vector(0, -CELLSIZE))
-        Dim bl2 As New Pattern(New Vector(0, 0), New Vector(-CELLSIZE, 0), New Vector(-2 * CELLSIZE, 0), New Vector(-2 * CELLSIZE, -CELLSIZE))
-        Dim bl3 As New Pattern(New Vector(0, -2 * CELLSIZE), New Vector(-CELLSIZE, 0), New Vector(-CELLSIZE, -CELLSIZE), New Vector(-CELLSIZE, -2 * CELLSIZE))
-        Dim bl4 As New Pattern(New Vector(CELLSIZE, 0), New Vector(-CELLSIZE, -CELLSIZE), New Vector(0, -CELLSIZE), New Vector(CELLSIZE, -CELLSIZE))
+        Dim bl1 As New Pattern(New IntPoint(0, CELLSIZE), New IntPoint(-CELLSIZE, CELLSIZE), New IntPoint(0, 0), New IntPoint(0, -CELLSIZE))
+        Dim bl2 As New Pattern(New IntPoint(0, 0), New IntPoint(-CELLSIZE, 0), New IntPoint(-2 * CELLSIZE, 0), New IntPoint(-2 * CELLSIZE, -CELLSIZE))
+        Dim bl3 As New Pattern(New IntPoint(0, -2 * CELLSIZE), New IntPoint(-CELLSIZE, 0), New IntPoint(-CELLSIZE, -CELLSIZE), New IntPoint(-CELLSIZE, -2 * CELLSIZE))
+        Dim bl4 As New Pattern(New IntPoint(CELLSIZE, 0), New IntPoint(-CELLSIZE, -CELLSIZE), New IntPoint(0, -CELLSIZE), New IntPoint(CELLSIZE, -CELLSIZE))
         bl1.NextPattern = bl2
         bl2.NextPattern = bl3
         bl3.NextPattern = bl4
         bl4.NextPattern = bl1
         'T
-        Dim t1 As New Pattern(New Vector(0, 0), New Vector(-CELLSIZE, -CELLSIZE), New Vector(CELLSIZE, -CELLSIZE), New Vector(0, -CELLSIZE))
-        Dim t2 As New Pattern(New Vector(0, 0), New Vector(CELLSIZE, CELLSIZE), New Vector(CELLSIZE, 0), New Vector(CELLSIZE, -CELLSIZE))
-        Dim t3 As New Pattern(New Vector(-CELLSIZE, CELLSIZE), New Vector(0, CELLSIZE), New Vector(CELLSIZE, CELLSIZE), New Vector(0, 0))
-        Dim t4 As New Pattern(New Vector(0, 0), New Vector(-CELLSIZE, CELLSIZE), New Vector(-CELLSIZE, 0), New Vector(-CELLSIZE, -CELLSIZE))
+        Dim t1 As New Pattern(New IntPoint(0, 0), New IntPoint(-CELLSIZE, -CELLSIZE), New IntPoint(CELLSIZE, -CELLSIZE), New IntPoint(0, -CELLSIZE))
+        Dim t2 As New Pattern(New IntPoint(0, 0), New IntPoint(CELLSIZE, CELLSIZE), New IntPoint(CELLSIZE, 0), New IntPoint(CELLSIZE, -CELLSIZE))
+        Dim t3 As New Pattern(New IntPoint(-CELLSIZE, CELLSIZE), New IntPoint(0, CELLSIZE), New IntPoint(CELLSIZE, CELLSIZE), New IntPoint(0, 0))
+        Dim t4 As New Pattern(New IntPoint(0, 0), New IntPoint(-CELLSIZE, CELLSIZE), New IntPoint(-CELLSIZE, 0), New IntPoint(-CELLSIZE, -CELLSIZE))
         t1.NextPattern = t2
         t2.NextPattern = t3
         t3.NextPattern = t4
         t4.NextPattern = t1
         'Z
-        Dim zh As New Pattern(New Vector(0, 0), New Vector(-CELLSIZE, 0), New Vector(0, -CELLSIZE), New Vector(CELLSIZE, -CELLSIZE))
-        Dim zv As New Pattern(New Vector(0, CELLSIZE), New Vector(-CELLSIZE, 0), New Vector(0, 0), New Vector(-CELLSIZE, -CELLSIZE))
+        Dim zh As New Pattern(New IntPoint(0, 0), New IntPoint(-CELLSIZE, 0), New IntPoint(0, -CELLSIZE), New IntPoint(CELLSIZE, -CELLSIZE))
+        Dim zv As New Pattern(New IntPoint(0, CELLSIZE), New IntPoint(-CELLSIZE, 0), New IntPoint(0, 0), New IntPoint(-CELLSIZE, -CELLSIZE))
         zh.NextPattern = zv
         zv.NextPattern = zh
         '反Z
-        Dim bzh As New Pattern(New Vector(CELLSIZE, 0), New Vector(0, 0), New Vector(0, -CELLSIZE), New Vector(-CELLSIZE, -CELLSIZE))
-        Dim bzv As New Pattern(New Vector(0, 0), New Vector(-CELLSIZE, CELLSIZE), New Vector(-CELLSIZE, 0), New Vector(0, -CELLSIZE))
+        Dim bzh As New Pattern(New IntPoint(CELLSIZE, 0), New IntPoint(0, 0), New IntPoint(0, -CELLSIZE), New IntPoint(-CELLSIZE, -CELLSIZE))
+        Dim bzv As New Pattern(New IntPoint(0, 0), New IntPoint(-CELLSIZE, CELLSIZE), New IntPoint(-CELLSIZE, 0), New IntPoint(0, -CELLSIZE))
         bzh.NextPattern = bzv
         bzv.NextPattern = bzh
         Patterns = {s4, lineh, linev, l1, l2, l3, l4, bl1, bl2, bl3, bl4, t1, t2, t3, t4, zh, zv, bzh, bzv}
@@ -86,23 +86,23 @@ Class MainWindow
     End Sub
     Private Sub DrawPattern(dc As DrawingContext, current As Pattern)
         For Each p In current.Points
-            dc.DrawRectangle(FillBrush, BorderPen, New Rect(CType((CType(current.Center, Vector) + p) * times + off, Point), Cell * times))
+            dc.DrawRectangle(FillBrush, BorderPen, New Rect((current.Center + p).ToPoint(times) + off, Cell.ToSize(times)))
         Next
     End Sub
     Private Sub DrawGround(dc As DrawingContext, cells(,) As Boolean)
         For i = 0 To MAX_WIDTH \ CELLSIZE - 1
             For j = MAX_HEIGHT \ CELLSIZE - 1 To 0 Step -1
                 If cells(i, j) Then
-                    dc.DrawRectangle(FillBrush, BorderPen, New Rect(New Point(i * CELLSIZE * times, j * CELLSIZE * times) + off, Cell * times))
+                    dc.DrawRectangle(FillBrush, BorderPen, New Rect((New IntPoint(i, j) * CELLSIZE).ToPoint(times) + off, Cell.ToSize(times)))
                 End If
             Next
         Next
     End Sub
     Private Sub Redraw()
-        Dim dc = squareVisual.RenderOpen()
-        DrawPattern(dc, current)
-        DrawGround(dc, cells)
-        dc.Close()
+        Using dc = squareVisual.RenderOpen()
+            DrawPattern(dc, current)
+            DrawGround(dc, cells)
+        End Using
     End Sub
     Protected Overrides ReadOnly Property VisualChildrenCount As Integer
         Get
@@ -256,15 +256,15 @@ Class MainWindow
 #End Region
 #Region "Pattern"
     Class Pattern
-        Public Sub New(ParamArray points() As Vector)
+        Public Sub New(ParamArray points() As IntPoint)
             Me.Points = points
         End Sub
         Public Property NextPattern As Pattern
-        Public Property Center As Point
-        Public ReadOnly Property Points As Vector()
+        Public Property Center As IntPoint
+        Public ReadOnly Property Points As IntPoint()
         Public Function IsConcat(cells(,) As Boolean) As Boolean
             For Each p In Points
-                Dim rp As Point = Center + p
+                Dim rp As IntPoint = Center + p
                 Dim x As Integer = rp.X \ CELLSIZE
                 Dim y As Integer = rp.Y \ CELLSIZE
                 If y + 1 >= MAX_HEIGHT \ CELLSIZE Then
@@ -278,7 +278,7 @@ Class MainWindow
         Public Function Concat(ByRef cells(,) As Boolean) As Boolean
             Dim result As Boolean = True
             For Each p In Points
-                Dim rp As Point = Center + p
+                Dim rp As IntPoint = Center + p
                 Dim x As Integer = rp.X \ CELLSIZE
                 Dim y As Integer = rp.Y \ CELLSIZE
                 If y < 0 Then
@@ -292,7 +292,7 @@ Class MainWindow
         Public Function MoveRight(cells(,) As Boolean) As Boolean
             Dim c = Center + GoRight
             For Each p In Points
-                Dim rp As Point = c + p
+                Dim rp As IntPoint = c + p
                 Dim x As Integer = rp.X \ CELLSIZE
                 Dim y As Integer = rp.Y \ CELLSIZE
                 If x >= MAX_WIDTH \ CELLSIZE OrElse (y > 0 AndAlso cells(x, y)) Then
@@ -305,7 +305,7 @@ Class MainWindow
         Public Function MoveLeft(cells(,) As Boolean, Optional time As Integer = 1) As Boolean
             Dim c = Center + GoLeft * time
             For Each p In Points
-                Dim rp As Point = c + p
+                Dim rp As IntPoint = c + p
                 Dim x As Integer = rp.X \ CELLSIZE
                 Dim y As Integer = rp.Y \ CELLSIZE
                 If x < 0 OrElse x >= MAX_WIDTH \ CELLSIZE OrElse (y > 0 AndAlso cells(x, y)) Then
@@ -319,7 +319,7 @@ Class MainWindow
             Dim pp = NextPattern
             pp.Center = Center
             For Each p In pp.Points
-                Dim rp As Point = pp.Center + p
+                Dim rp As IntPoint = pp.Center + p
                 Dim x As Integer = rp.X \ CELLSIZE
                 Dim y As Integer = rp.Y \ CELLSIZE
                 If x < 0 Then

@@ -1,0 +1,57 @@
+﻿<Window x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Maze"
+        mc:Ignorable="d"
+        Title="迷宫" Height="580" Width="550" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <RoutedUICommand x:Key="Create" Text="Create"/>
+        <RoutedUICommand x:Key="Tips" Text="ShowTips"/>
+        <RoutedUICommand x:Key="Next" Text="ShowNext"/>
+        <RoutedUICommand x:Key="Path" Text="ShowPath"/>
+        <RoutedUICommand x:Key="Up" Text="Up"/>
+        <RoutedUICommand x:Key="Down" Text="Down"/>
+        <RoutedUICommand x:Key="Left" Text="Left"/>
+        <RoutedUICommand x:Key="Right" Text="Right"/>
+        <RoutedUICommand x:Key="SUp" Text="StraightUp"/>
+        <RoutedUICommand x:Key="SDown" Text="StraightDown"/>
+        <RoutedUICommand x:Key="SLeft" Text="StraightLeft"/>
+        <RoutedUICommand x:Key="SRight" Text="StraightRight"/>
+        <RoutedUICommand x:Key="Save" Text="Save"/>
+        <RoutedUICommand x:Key="Open" Text="Open"/>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{StaticResource Create}" Gesture="F5"/>
+        <KeyBinding Command="{StaticResource Tips}" Gesture="F1"/>
+        <KeyBinding Command="{StaticResource Next}" Gesture="F2"/>
+        <KeyBinding Command="{StaticResource Path}" Gesture="F3"/>
+        <KeyBinding Command="{StaticResource Up}" Gesture="Up"/>
+        <KeyBinding Command="{StaticResource Down}" Gesture="Down"/>
+        <KeyBinding Command="{StaticResource Left}" Gesture="Left"/>
+        <KeyBinding Command="{StaticResource Right}" Gesture="Right"/>
+        <KeyBinding Command="{StaticResource SUp}" Gesture="Shift+Up"/>
+        <KeyBinding Command="{StaticResource SDown}" Gesture="Shift+Down"/>
+        <KeyBinding Command="{StaticResource SLeft}" Gesture="Shift+Left"/>
+        <KeyBinding Command="{StaticResource SRight}" Gesture="Shift+Right"/>
+        <KeyBinding Command="{StaticResource Save}" Gesture="Ctrl+S"/>
+        <KeyBinding Command="{StaticResource Open}" Gesture="Ctrl+O"/>
+    </Window.InputBindings>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource Create}" Executed="CreateMaze"/>
+        <CommandBinding Command="{StaticResource Tips}" Executed="StartDrawTips"/>
+        <CommandBinding Command="{StaticResource Next}" Executed="DrawNext"/>
+        <CommandBinding Command="{StaticResource Path}" Executed="DrawPath"/>
+        <CommandBinding Command="{StaticResource Up}" Executed="GoUp"/>
+        <CommandBinding Command="{StaticResource Down}" Executed="GoDown"/>
+        <CommandBinding Command="{StaticResource Left}" Executed="GoLeft"/>
+        <CommandBinding Command="{StaticResource Right}" Executed="GoRight"/>
+        <CommandBinding Command="{StaticResource SUp}" Executed="GoSUp"/>
+        <CommandBinding Command="{StaticResource SDown}" Executed="GoSDown"/>
+        <CommandBinding Command="{StaticResource SLeft}" Executed="GoSLeft"/>
+        <CommandBinding Command="{StaticResource SRight}" Executed="GoSRight"/>
+        <CommandBinding Command="{StaticResource Save}" Executed="SaveMaze"/>
+        <CommandBinding Command="{StaticResource Open}" Executed="OpenMaze"/>
+    </Window.CommandBindings>
+</Window>
