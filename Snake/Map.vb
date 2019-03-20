@@ -23,6 +23,12 @@ Class Map
         End Get
     End Property
 
+    Public ReadOnly Property IsFoodLoaded As Boolean
+        Get
+            Return foods.Count > 0
+        End Get
+    End Property
+
     Public Sub Move()
         Dim count As Integer = snakes.Count
         For i = 0 To count - 1
@@ -51,6 +57,7 @@ Class Map
                 foods(If(shareFood, 0, i)) = NewFood(i)
             End If
         Next
+        OnCreatedFood(EventArgs.Empty)
     End Sub
 
     Private Function NewFood(index As Integer) As IntPoint
@@ -69,6 +76,12 @@ Class Map
         Return f
     End Function
 
+    Public Event CreatedFood As EventHandler
+
+    Protected Overridable Sub OnCreatedFood(e As EventArgs)
+        RaiseEvent CreatedFood(Me, e)
+    End Sub
+
     Public Sub Reset(share As Boolean, ParamArray starts() As IntPoint)
         snakes.Clear()
         For Each p In starts
@@ -83,5 +96,6 @@ Class Map
                 foods.Add(NewFood(i))
             Next
         End If
+        OnCreatedFood(EventArgs.Empty)
     End Sub
 End Class

@@ -1,4 +1,6 @@
 ﻿Imports System.Windows.Threading
+Imports GamesHelper
+
 Class MainWindow
 #Region "Constants"
     Private Const SHINE As Integer = 3
@@ -26,7 +28,9 @@ Class MainWindow
     Private off As Vector
     Private WithEvents Timer As New DispatcherTimer()
     Private WithEvents TimerEnded As New DispatcherTimer()
-    Private visual As New DrawingVisual
+    Private backVisual As New DrawingVisual
+    Private foodVisual As New DrawingVisual
+    Private snakeVisual As New DrawingVisual
     Private mode As GameMode
     Private ReadOnly map As New Map()
 #End Region
@@ -36,7 +40,10 @@ Class MainWindow
     ''' </summary>
     Public Sub New()
         InitializeComponent()
-        Me.AddVisualChild(visual)
+        Me.AddVisualChild(backVisual)
+        Me.AddVisualChild(foodVisual)
+        Me.AddVisualChild(snakeVisual)
+        AddHandler map.CreatedFood, Sub(sender, e) DrawAllFood()
         TimerEnded.Interval = TimeSpan.FromMilliseconds(400)
         Timer.Interval = TimeSpan.FromMilliseconds(40)
     End Sub
@@ -46,6 +53,7 @@ Class MainWindow
     Private Sub InitGame()
         mode = GameMode.One
         map.Reset(False, New IntPoint(13, 16))
+        DrawBackground()
         Timer.Start()
     End Sub
     ''' <summary>
@@ -54,11 +62,13 @@ Class MainWindow
     Private Sub InitGame2()
         mode = GameMode.Two
         map.Reset(False, New IntPoint(13, 12), New IntPoint(13, 20))
+        DrawBackground()
         Timer.Start()
     End Sub
     Private Sub InitGame3()
         mode = GameMode.TwoCompete
         map.Reset(True, New IntPoint(13, 12), New IntPoint(13, 20))
+        DrawBackground()
         Timer.Start()
     End Sub
 #End Region
@@ -119,36 +129,36 @@ Class MainWindow
         dc.DrawEllipse(brush, NoBorderPen, food.ToPoint(times) + cell / 2 + off, times / 2, times / 2)
     End Sub
 
-    Private Sub DrawBackground(dc As DrawingContext)
-        dc.DrawRectangle(BackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+    Private Sub DrawBackground()
+        Using dc = backVisual.RenderOpen()
+            dc.DrawRectangle(BackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+        End Using
     End Sub
 
-    Private Sub DrawAllFood(dc As DrawingContext)
-        DrawFood(dc, map.Food(0), FoodBrush)
-        If mode = GameMode.Two Then
-            DrawFood(dc, map.Food(1), FoodBrush2)
-        End If
+    Private Sub DrawAllFood()
+        Using dc = foodVisual.RenderOpen()
+            DrawFood(dc, map.Food(0), FoodBrush)
+            If mode = GameMode.Two Then
+                DrawFood(dc, map.Food(1), FoodBrush2)
+            End If
+        End Using
     End Sub
 
     Private Sub DrawAll()
-        Using dc = visual.RenderOpen()
-            DrawBackground(dc)
+        Using dc = snakeVisual.RenderOpen()
             DrawSnake(dc, map.Snake(0), Body, Head)
             If mode <> GameMode.One Then
                 DrawSnake(dc, map.Snake(1), Body2, Head2)
             End If
-            DrawAllFood(dc)
         End Using
     End Sub
 
     Private Sub DrawAllWithHeadLast()
-        Using dc = visual.RenderOpen()
-            DrawBackground(dc)
+        Using dc = snakeVisual.RenderOpen()
             DrawSnakeWithHeadLast(dc, map.Snake(0), Body, Head)
             If mode <> GameMode.One Then
                 DrawSnakeWithHeadLast(dc, map.Snake(1), Body2, Head2)
             End If
-            DrawAllFood(dc)
         End Using
     End Sub
 #End Region
@@ -159,7 +169,7 @@ Class MainWindow
     ''' <returns>1</returns>
     Protected Overrides ReadOnly Property VisualChildrenCount As Integer
         Get
-            Return 1
+            Return 3
         End Get
     End Property
     ''' <summary>
@@ -169,26 +179,33 @@ Class MainWindow
     ''' <returns>请求的子元素。这不应返回 null；如果提供的索引超出范围，则引发<seealso cref="IndexOutOfRangeException"/>。</returns>
     ''' <exception cref="IndexOutOfRangeException"></exception>
     Protected Overrides Function GetVisualChild(index As Integer) As Visual
-        If index = 0 Then
-            Return visual
-        Else
-            Throw New IndexOutOfRangeException()
-        End If
+        Select Case index
+            Case 0
+                Return backVisual
+            Case 1
+                Return foodVisual
+            Case 2
+                Return snakeVisual
+            Case Else
+                Throw New IndexOutOfRangeException()
+        End Select
     End Function
 #End Region
 #Region "Execute"
     Private Sub Timer_Tick(sender As Object, e As EventArgs) Handles Timer.Tick
+        Dim eaten As Boolean = False
         Try
             map.Move()
         Catch ex As SnakeEatenException
             Timer.Stop()
+            eaten = True
             TimerEnded.Start()
         End Try
         DrawAll()
         If mode = GameMode.One Then
-            Me.Title = GetTitle()
+            Me.Title = If(eaten, String.Format(CAPTION_WITH_ENDED, map.Snake(0).Score), GetTitle())
         Else
-            Me.Title = GetTitle2()
+            Me.Title = If(eaten, String.Format(CAPTION_TWO_ENDED, map.Snake(0).Score, map.Snake(1).Score), GetTitle2())
         End If
     End Sub
 
@@ -233,9 +250,8 @@ Class MainWindow
         If shineNumber Mod 2 = 0 Then
             DrawAllWithHeadLast()
         Else
-            Using dc = visual.RenderOpen()
-                DrawBackground(dc)
-                DrawAllFood(dc)
+            Using dc = snakeVisual.RenderOpen()
+                '清除
             End Using
         End If
     End Sub
@@ -245,16 +261,15 @@ Class MainWindow
     End Sub
 
     Private Sub MainWindow_SizeChanged(sender As Object, e As SizeChangedEventArgs) Handles Me.SizeChanged
-        Dim r = GetClientRect(Me)
-        Dim dpi = VisualTreeHelper.GetDpi(visual)
-        Dim w = (r.Right - r.Left) / dpi.DpiScaleX
-        Dim h = (r.Bottom - r.Top) / dpi.DpiScaleY
-        times = Math.Min(w / Map.WIDTH, h / Map.HEIGHT)
+        Dim s = GetClientSizeWithDpi(Me, snakeVisual)
+        times = Math.Min(s.Width / Map.WIDTH, s.Height / Map.HEIGHT)
         realWidth = Map.WIDTH * times
         realHeight = Map.HEIGHT * times
         cell = New Vector(times, times)
-        off = New Vector((w - realWidth) / 2, (h - realHeight) / 2)
+        off = New Vector((s.Width - realWidth) / 2, (s.Height - realHeight) / 2)
         If IsLoaded Then
+            DrawBackground()
+            DrawAllFood()
             DrawAll()
         End If
     End Sub

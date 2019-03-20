@@ -6,7 +6,7 @@
         xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
         xmlns:local="clr-namespace:Square"
         mc:Ignorable="d"
-        Title="俄罗斯方块" Height="400" Width="220" ResizeMode="CanMinimize" input:InputMethod.IsInputMethodEnabled="False">
+        Title="俄罗斯方块" Height="400" Width="220" input:InputMethod.IsInputMethodEnabled="False">
     <Window.Resources>
         <RoutedUICommand x:Key="Restart" Text="Restart"/>
         <RoutedUICommand x:Key="Right" Text="GoRight"/>
