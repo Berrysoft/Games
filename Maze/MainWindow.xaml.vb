@@ -6,8 +6,8 @@ Imports GamesHelper
 Imports Microsoft.Win32
 
 Class MainWindow
-    Private Const MAX_WIDTH As Integer = 25
-    Private Const MAX_HEIGHT As Integer = 25
+    Private Const MAX_WIDTH As Integer = 50
+    Private Const MAX_HEIGHT As Integer = 50
     Private times, realWidth, realHeight As Double
     Private off As Vector
     Private visual As New DrawingVisual
@@ -21,14 +21,10 @@ Class MainWindow
         Me.AddVisualChild(visual)
         Me.AddVisualChild(bodyVisual)
         Me.AddVisualChild(pathVisual)
-        CreateMaze()
     End Sub
 
     Public Sub New(fileName As String)
-        InitializeComponent()
-        Me.AddVisualChild(visual)
-        Me.AddVisualChild(bodyVisual)
-        Me.AddVisualChild(pathVisual)
+        Me.New()
         OpenMaze(fileName)
     End Sub
 
@@ -52,13 +48,24 @@ Class MainWindow
     End Function
 
     Private maze As Maze
-    Private Sub CreateMaze()
+    Private Async Sub CreateMaze()
         Timer.Stop()
-        maze = Maze.Create(MAX_WIDTH, MAX_HEIGHT)
-        DrawMaze()
-        current = New IntPoint(0, 0)
-        state = TipState.NoTips
-        DrawCurrent()
+        Await Me.Dispatcher.InvokeAsync(AddressOf DrawCreating)
+        maze = Await Task.Run(Function() Maze.Create(MAX_WIDTH, MAX_HEIGHT))
+        Await Me.Dispatcher.InvokeAsync(
+            Sub()
+                DrawMaze()
+                current = New IntPoint(0, 0)
+                state = TipState.NoTips
+                DrawCurrent()
+            End Sub)
+    End Sub
+
+    Private ReadOnly CreatingText As New FormattedText("正在生成...", Threading.Thread.CurrentThread.CurrentCulture, FlowDirection.LeftToRight, New Typeface("Microsoft Tahei UI"), 40, Brushes.Yellow, 1)
+    Private Sub DrawCreating()
+        Using dc As DrawingContext = visual.RenderOpen
+            dc.DrawText(CreatingText, New Point((realWidth - CreatingText.Width) / 2, (realHeight - CreatingText.Height) / 2))
+        End Using
     End Sub
 
     Private Const Offset As Integer = 20
@@ -101,8 +108,8 @@ Class MainWindow
         realWidth = MAX_WIDTH * times
         realHeight = MAX_HEIGHT * times
         off = New Vector((s.Width - realWidth) / 2, (s.Height - realHeight) / 2)
+        Body.SetFontSize(times * 4 / 5)
         If maze IsNot Nothing Then
-            Body.SetFontSize(times * 4 / 5)
             DrawMaze()
             DrawCurrent()
         End If
@@ -341,6 +348,12 @@ Class MainWindow
         End Using
         DrawMaze()
         DrawCurrent()
+    End Sub
+
+    Private Sub MainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        If maze Is Nothing Then
+            CreateMaze()
+        End If
     End Sub
 End Class
 
