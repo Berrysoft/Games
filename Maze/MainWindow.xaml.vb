@@ -64,8 +64,10 @@ Class MainWindow
     Private ReadOnly CreatingText As New FormattedText("正在生成...", Threading.Thread.CurrentThread.CurrentCulture, FlowDirection.LeftToRight, New Typeface("Microsoft Tahei UI"), 40, Brushes.Yellow, 1)
     Private Sub DrawCreating()
         Using dc As DrawingContext = visual.RenderOpen
-            dc.DrawText(CreatingText, New Point((realWidth - CreatingText.Width) / 2, (realHeight - CreatingText.Height) / 2))
+            dc.DrawText(CreatingText, New Point((realWidth - CreatingText.Width) / 2, (realHeight - CreatingText.Height) / 2) + off)
         End Using
+        bodyVisual.RenderOpen().Close()
+        pathVisual.RenderOpen().Close()
     End Sub
 
     Private Const Offset As Integer = 20
