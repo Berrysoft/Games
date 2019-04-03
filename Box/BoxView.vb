@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.ComponentModel
+Imports System.IO
 Imports GamesHelper
 
 Class BoxView
@@ -19,7 +20,14 @@ Class BoxView
     Public Sub New()
         AddVisualChild(mapVisual)
         AddVisualChild(bodyVisual)
-        LoadLevel()
+    End Sub
+
+    Private Sub BoxView_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        If DesignerProperties.GetIsInDesignMode(Me) Then
+            maps.Add(New LevelMap())
+        Else
+            LoadLevel()
+        End If
         GoLevel(0)
         DrawAll()
     End Sub
@@ -50,11 +58,13 @@ Class BoxView
         GoLevel(Level)
     End Sub
 
+    Public Event LevelPassed As EventHandler(Of Integer)
+
     Public Sub GoDir(dir As Direction)
         currentMap.GoDir(dir)
         DrawAll()
         If currentMap.Map.AsEnumerable().All(Function(state) state <> SquareState.EndPoint) Then
-            MessageBox.Show("恭喜过关！")
+            RaiseEvent LevelPassed(Me, Level)
             GoNext()
         End If
     End Sub
@@ -72,6 +82,8 @@ Class BoxView
         End Get
     End Property
 
+    Public Event LevelChanged As EventHandler(Of Integer)
+
     Public Sub GoPrev()
         GoLevel(Level - 1)
     End Sub
@@ -86,7 +98,14 @@ Class BoxView
         _Level = index
         BoxView_SizeChanged()
         DrawAll()
+        RaiseEvent LevelChanged(Me, Level)
     End Sub
+
+    Public ReadOnly Property CanUndo As Boolean
+        Get
+            Return currentMap.CanUndo
+        End Get
+    End Property
 
     Protected Overrides ReadOnly Property VisualChildrenCount As Integer
         Get
@@ -139,18 +158,39 @@ Class BoxView
     End Sub
 
     Private Sub DrawBody()
+        Dim r = times / 2
         Using dc As DrawingContext = bodyVisual.RenderOpen()
-            dc.DrawEllipse(Brushes.DeepSkyBlue, BorderPen, currentMap.Body.ToPoint(times) + New Vector(times / 2, times / 2) + off, times / 2, times / 2)
+            dc.DrawEllipse(Brushes.DeepSkyBlue, BorderPen, currentMap.Body.ToPoint(times) + New Vector(r, r) + off, r, r)
         End Using
     End Sub
 
     Private Sub BoxView_SizeChanged() Handles Me.SizeChanged
-        Dim maxx = currentMap.Map.GetLength(0)
-        Dim maxy = currentMap.Map.GetLength(1)
-        Dim tw As Double = Me.ActualWidth / maxx
-        Dim th As Double = Me.ActualHeight / maxy
-        times = Math.Min(tw, th)
-        off = New Vector((Me.ActualWidth - maxx * times) / 2, (Me.ActualHeight - maxy * times) / 2)
-        DrawAll()
+        If currentMap IsNot Nothing Then
+            Dim maxx = currentMap.Map.GetLength(0)
+            Dim maxy = currentMap.Map.GetLength(1)
+            Dim tw As Double = Me.ActualWidth / maxx
+            Dim th As Double = Me.ActualHeight / maxy
+            times = Math.Min(tw, th)
+            off = New Vector((Me.ActualWidth - maxx * times) / 2, (Me.ActualHeight - maxy * times) / 2)
+            DrawAll()
+        End If
+    End Sub
+
+    Private Sub BoxView_MouseUp(sender As Object, e As MouseButtonEventArgs) Handles Me.MouseUp
+        If e.LeftButton = MouseButtonState.Released Then
+            Dim p = e.GetPosition(Me) - off
+            Dim acp As New IntPoint(p.X \ times, p.Y \ times)
+            If acp.X = currentMap.Body.X OrElse acp.Y = currentMap.Body.Y Then
+                If acp.X - currentMap.Body.X = 1 Then
+                    GoDir(Direction.Right)
+                ElseIf acp.X - currentMap.Body.X = -1 Then
+                    GoDir(Direction.Left)
+                ElseIf acp.Y - currentMap.Body.Y = 1 Then
+                    GoDir(Direction.Bottom)
+                ElseIf acp.Y - currentMap.Body.Y = -1 Then
+                    GoDir(Direction.Top)
+                End If
+            End If
+        End If
     End Sub
 End Class

@@ -40,6 +40,10 @@ Class LevelMap
     Public ReadOnly Property Body As IntPoint
     Public ReadOnly Property Map As SquareState(,)
 
+    Public Sub New()
+        Me.New(New IntPoint(), {})
+    End Sub
+
     Public Sub New(body As IntPoint, map As SquareState(,))
         Me.Body = body
         Me.Map = map
@@ -118,4 +122,10 @@ Class LevelMap
             End If
         End If
     End Sub
+
+    Public ReadOnly Property CanUndo As Boolean
+        Get
+            Return steps.Count > 0
+        End Get
+    End Property
 End Class

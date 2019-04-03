@@ -24,9 +24,9 @@
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource Restart}" Executed="Game_Restart"/>
         <CommandBinding Command="{StaticResource GoDir}" Executed="Game_GoDir"/>
-        <CommandBinding Command="{StaticResource Undo}" Executed="Game_Undo"/>
-        <CommandBinding Command="{StaticResource GoPrev}" Executed="Game_GoPrev"/>
-        <CommandBinding Command="{StaticResource GoNext}" Executed="Game_GoNext"/>
+        <CommandBinding Command="{StaticResource Undo}" Executed="Game_Undo" CanExecute="Game_CanUndo"/>
+        <CommandBinding Command="{StaticResource GoPrev}" Executed="Game_GoPrev" CanExecute="Game_CanGoPrev"/>
+        <CommandBinding Command="{StaticResource GoNext}" Executed="Game_GoNext" CanExecute="Game_CanGoNext"/>
         <CommandBinding Command="{StaticResource GoLevel}" Executed="Game_GoLevel"/>
         <CommandBinding Command="ApplicationCommands.Close" Executed="Close"/>
         <CommandBinding Command="{StaticResource GetHelp}" Executed="Game_GetHelp"/>
@@ -71,6 +71,6 @@
             <Button Command="{StaticResource GoNext}" Content="{StaticResource GoNextIcon}"/>
             <Button Command="{StaticResource GoLevel}" Content="{StaticResource GoLevelIcon}"/>
         </ToolBar>
-        <local:BoxView x:Name="MainView" Grid.Row="2"/>
+        <local:BoxView x:Name="MainView" Grid.Row="2" LevelPassed="MainView_LevelPassed" LevelChanged="MainView_LevelChanged"/>
     </Grid>
 </Window>

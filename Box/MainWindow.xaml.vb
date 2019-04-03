@@ -34,4 +34,30 @@
         Dim wnd As New HelpWindow
         wnd.ShowDialog()
     End Sub
+
+    Private Sub Game_CanUndo(sender As Object, e As CanExecuteRoutedEventArgs)
+        If MainView IsNot Nothing Then
+            e.CanExecute = MainView.CanUndo
+        End If
+    End Sub
+
+    Private Sub Game_CanGoPrev(sender As Object, e As CanExecuteRoutedEventArgs)
+        If MainView IsNot Nothing Then
+            e.CanExecute = MainView.Level > 0
+        End If
+    End Sub
+
+    Private Sub Game_CanGoNext(sender As Object, e As CanExecuteRoutedEventArgs)
+        If MainView IsNot Nothing Then
+            e.CanExecute = MainView.Level < MainView.MaxLevel - 1
+        End If
+    End Sub
+
+    Private Sub MainView_LevelPassed(sender As Object, e As Integer)
+        MessageBox.Show("恭喜过关！")
+    End Sub
+
+    Private Sub MainView_LevelChanged(sender As Object, e As Integer)
+        Me.Title = $"推箱子 - 第{e + 1}关"
+    End Sub
 End Class
