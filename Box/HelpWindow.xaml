@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Box"
         mc:Ignorable="d"
-        Title="帮助" Height="200" Width="200" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="帮助" Height="220" Width="200" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,6 +18,6 @@
 上一关&#x09;&#x09;Ctrl+P
 下一关&#x09;&#x09;Ctrl+N
 选择关卡&#x09;Ctrl+S</TextBlock>
-        <Button Grid.Row="1" Margin="10" HorizontalAlignment="Right" Width="100" IsDefault="True" IsCancel="True">确定(_O)</Button>
+        <Button Grid.Row="1" Margin="10" HorizontalAlignment="Right" Width="80" IsDefault="True" IsCancel="True">确定(_O)</Button>
     </Grid>
 </Window>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Box"
         mc:Ignorable="d"
-        Title="推箱子" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="推箱子" Height="600" Width="600" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <RoutedCommand x:Key="Restart"/>
         <RoutedCommand x:Key="GoDir"/>
@@ -14,6 +14,12 @@
         <RoutedCommand x:Key="GoNext"/>
         <RoutedCommand x:Key="GoLevel"/>
         <RoutedCommand x:Key="GetHelp"/>
+
+        <Image x:Key="RestartIcon" Source="bmrestart.png"/>
+        <Image x:Key="UndoIcon" Source="bmundo.png"/>
+        <Image x:Key="GoPrevIcon" Source="bmprev.png"/>
+        <Image x:Key="GoNextIcon" Source="bmnext.png"/>
+        <Image x:Key="GoLevelIcon" Source="bmset.png"/>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource Restart}" Executed="Game_Restart"/>
@@ -46,7 +52,7 @@
         <Menu Grid.Row="0">
             <MenuItem Header="操作(_C)">
                 <MenuItem Header="重新开始(_R)" Command="{StaticResource Restart}" InputGestureText="Ctrl+R"/>
-                <MenuItem Header="撤销(_U)" Command="{StaticResource Undo}" InputGestureText="Ctrl+Z"/>
+                <MenuItem Header="撤销(_U)" Command="{StaticResource Undo}" InputGestureText="Ctrl+Z" />
                 <MenuItem Header="上一关(_P)" Command="{StaticResource GoPrev}" InputGestureText="Ctrl+P"/>
                 <MenuItem Header="下一关(_N)" Command="{StaticResource GoNext}" InputGestureText="Ctrl+N"/>
                 <Separator/>
@@ -59,31 +65,11 @@
             </MenuItem>
         </Menu>
         <ToolBar Grid.Row="1">
-            <Button Command="{StaticResource Restart}">
-                <Button.Content>
-                    <Image Source="bmrestart.bmp"/>
-                </Button.Content>
-            </Button>
-            <Button Command="{StaticResource Undo}">
-                <Button.Content>
-                    <Image Source="bmundo.bmp"/>
-                </Button.Content>
-            </Button>
-            <Button Command="{StaticResource GoPrev}">
-                <Button.Content>
-                    <Image Source="bmprev.bmp"/>
-                </Button.Content>
-            </Button>
-            <Button Command="{StaticResource GoNext}">
-                <Button.Content>
-                    <Image Source="bmnext.bmp"/>
-                </Button.Content>
-            </Button>
-            <Button Command="{StaticResource GoLevel}">
-                <Button.Content>
-                    <Image Source="bmset.bmp"/>
-                </Button.Content>
-            </Button>
+            <Button Command="{StaticResource Restart}" Content="{StaticResource RestartIcon}"/>
+            <Button Command="{StaticResource Undo}" Content="{StaticResource UndoIcon}"/>
+            <Button Command="{StaticResource GoPrev}" Content="{StaticResource GoPrevIcon}"/>
+            <Button Command="{StaticResource GoNext}" Content="{StaticResource GoNextIcon}"/>
+            <Button Command="{StaticResource GoLevel}" Content="{StaticResource GoLevelIcon}"/>
         </ToolBar>
         <local:BoxView x:Name="MainView" Grid.Row="2"/>
     </Grid>

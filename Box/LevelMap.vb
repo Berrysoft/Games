@@ -78,7 +78,7 @@ Class LevelMap
                 Return Nothing
             End If
             Dim bnewstate = Map(bnewb.X, bnewb.Y)
-            If bnewstate = SquareState.Wall Then
+            If bnewstate = SquareState.Wall OrElse ((bnewstate And SquareState.Box) <> 0) Then
                 Return Nothing
             End If
             Map(newb.X, newb.Y) = newstate And (Not SquareState.Box)
@@ -91,13 +91,13 @@ Class LevelMap
     Private Function GetNewPoint(p As IntPoint, dir As Direction) As IntPoint
         Select Case dir
             Case Direction.Left
-                p.Y -= 1
-            Case Direction.Right
-                p.Y += 1
-            Case Direction.Top
                 p.X -= 1
-            Case Direction.Bottom
+            Case Direction.Right
                 p.X += 1
+            Case Direction.Top
+                p.Y -= 1
+            Case Direction.Bottom
+                p.Y += 1
         End Select
         Return p
     End Function

@@ -51,6 +51,9 @@
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>box.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -151,19 +154,27 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="bmnext.bmp" />
-    <Resource Include="bmprev.bmp" />
-    <Resource Include="bmrestart.bmp" />
-    <Resource Include="bmset.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="bmundo.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\GamesHelper\GamesHelper.vbproj">
       <Project>{9457cc4f-780b-4699-b7ba-69026aa75e27}</Project>
       <Name>GamesHelper</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="levels.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="box.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="bmnext.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="bmprev.png" />
+    <Resource Include="bmrestart.png" />
+    <Resource Include="bmset.png" />
+    <Resource Include="bmundo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

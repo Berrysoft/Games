@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Box"
         mc:Ignorable="d"
-        Title="选择关卡" Height="130" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="选择关卡" Height="130" Width="300" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,8 +20,8 @@
             <ComboBox x:Name="LevelCombo" Grid.Column="1" Margin="10" SelectedIndex="{Binding Level,Mode=TwoWay}"/>
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Grid.Row="1" Margin="10" Width="100" IsDefault="True" Click="Close">确定(_O)</Button>
-            <Button Grid.Row="1" Margin="10" Width="100" IsCancel="True">取消(_C)</Button>
+            <Button Grid.Row="1" Margin="10" Width="80" IsDefault="True" Click="OK_Click">确定(_O)</Button>
+            <Button Grid.Row="1" Margin="10" Width="80" IsCancel="True">取消(_C)</Button>
         </StackPanel>
     </Grid>
 </Window>

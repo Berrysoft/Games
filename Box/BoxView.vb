@@ -1,4 +1,5 @@
-﻿Imports GamesHelper
+﻿Imports System.IO
+Imports GamesHelper
 
 Class BoxView
     Inherits FrameworkElement
@@ -12,24 +13,37 @@ Class BoxView
     Private mapVisual As New DrawingVisual
     Private bodyVisual As New DrawingVisual
 
-    Private maps As LevelMap()
+    Private maps As New List(Of LevelMap)
     Private currentMap As LevelMap
 
     Public Sub New()
         AddVisualChild(mapVisual)
         AddVisualChild(bodyVisual)
-        ReDim maps(0)
-        maps(0) = New LevelMap(New IntPoint(4, 4),
-        {{1, 1, 1, 1, 1, 1, 1, 1},
-          {1, 1, 1, 4, 1, 1, 1, 1},
-          {1, 1, 1, 0, 1, 1, 1, 1},
-          {1, 1, 1, 2, 0, 2, 4, 1},
-          {1, 4, 0, 2, 0, 1, 1, 1},
-          {1, 1, 1, 1, 2, 1, 1, 1},
-          {1, 1, 1, 1, 4, 1, 1, 1},
-          {1, 1, 1, 1, 1, 1, 1, 1}})
+        LoadLevel()
         GoLevel(0)
         DrawAll()
+    End Sub
+
+    Private Sub LoadLevel()
+        Using stream As New StreamReader("levels.txt")
+            Do
+                Dim first = stream.ReadLine()
+                If String.IsNullOrWhiteSpace(first) Then
+                    Exit Do
+                End If
+                Dim nums = first.Split(" "c).Select(Function(s) CInt(s)).ToArray()
+                Dim map(nums(0) - 1, nums(1) - 1) As SquareState
+                Dim body As New IntPoint(nums(2), nums(3))
+                For j = 0 To nums(1) - 1
+                    Dim line = stream.ReadLine()
+                    Dim states = line.Split(" "c).Select(Function(s) CInt(s)).ToArray()
+                    For i = 0 To nums(0) - 1
+                        map(i, j) = states(i)
+                    Next
+                Next
+                maps.Add(New LevelMap(body, map))
+            Loop
+        End Using
     End Sub
 
     Public Sub Restart()
@@ -54,7 +68,7 @@ Class BoxView
 
     Public ReadOnly Property MaxLevel As Integer
         Get
-            Return maps.Length
+            Return maps.Count
         End Get
     End Property
 
@@ -70,6 +84,7 @@ Class BoxView
         If index < 0 OrElse index >= MaxLevel Then Return
         currentMap = maps(index).Clone()
         _Level = index
+        BoxView_SizeChanged()
         DrawAll()
     End Sub
 
@@ -98,14 +113,14 @@ Class BoxView
     Private Sub DrawMap()
         Dim roundr = times / 8
         Dim rectsize As New Size(times, times)
-        Dim maxx = currentMap.Map.GetLength(1)
-        Dim maxy = currentMap.Map.GetLength(0)
+        Dim maxx = currentMap.Map.GetLength(0)
+        Dim maxy = currentMap.Map.GetLength(1)
         Using dc As DrawingContext = mapVisual.RenderOpen()
             dc.DrawRectangle(Brushes.Yellow, NoBorderPen, New Rect(CType(off, Point), New IntPoint(maxx, maxy).ToSize(times)))
-            For i = 0 To maxy - 1
-                For j = 0 To maxx - 1
+            For i = 0 To maxx - 1
+                For j = 0 To maxy - 1
                     Dim state = currentMap.Map(i, j)
-                    Dim p = New IntPoint(j, i)
+                    Dim p = New IntPoint(i, j)
                     Select Case state
                         Case SquareState.Road
                         Case SquareState.Wall
@@ -125,13 +140,13 @@ Class BoxView
 
     Private Sub DrawBody()
         Using dc As DrawingContext = bodyVisual.RenderOpen()
-            dc.DrawEllipse(Brushes.Blue, BorderPen, New IntPoint(currentMap.Body.Y, currentMap.Body.X).ToPoint(times) + New Vector(times / 2, times / 2) + off, times / 2, times / 2)
+            dc.DrawEllipse(Brushes.DeepSkyBlue, BorderPen, currentMap.Body.ToPoint(times) + New Vector(times / 2, times / 2) + off, times / 2, times / 2)
         End Using
     End Sub
 
-    Private Sub BoxView_SizeChanged(sender As Object, e As SizeChangedEventArgs) Handles Me.SizeChanged
-        Dim maxx = currentMap.Map.GetLength(1)
-        Dim maxy = currentMap.Map.GetLength(0)
+    Private Sub BoxView_SizeChanged() Handles Me.SizeChanged
+        Dim maxx = currentMap.Map.GetLength(0)
+        Dim maxy = currentMap.Map.GetLength(1)
         Dim tw As Double = Me.ActualWidth / maxx
         Dim th As Double = Me.ActualHeight / maxy
         times = Math.Min(tw, th)
