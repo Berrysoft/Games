@@ -6,8 +6,8 @@ Imports GamesHelper
 Imports Microsoft.Win32
 
 Class MainWindow
-    Private Const MAX_WIDTH As Integer = 50
-    Private Const MAX_HEIGHT As Integer = 50
+    Private Const MAX_WIDTH As Integer = 30
+    Private Const MAX_HEIGHT As Integer = 30
     Private times, realWidth, realHeight As Double
     Private off As Vector
     Private visual As New DrawingVisual
