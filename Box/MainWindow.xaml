@@ -1,0 +1,90 @@
+﻿<Window x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Box"
+        mc:Ignorable="d"
+        Title="推箱子" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <RoutedCommand x:Key="Restart"/>
+        <RoutedCommand x:Key="GoDir"/>
+        <RoutedCommand x:Key="Undo"/>
+        <RoutedCommand x:Key="GoPrev"/>
+        <RoutedCommand x:Key="GoNext"/>
+        <RoutedCommand x:Key="GoLevel"/>
+        <RoutedCommand x:Key="GetHelp"/>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource Restart}" Executed="Game_Restart"/>
+        <CommandBinding Command="{StaticResource GoDir}" Executed="Game_GoDir"/>
+        <CommandBinding Command="{StaticResource Undo}" Executed="Game_Undo"/>
+        <CommandBinding Command="{StaticResource GoPrev}" Executed="Game_GoPrev"/>
+        <CommandBinding Command="{StaticResource GoNext}" Executed="Game_GoNext"/>
+        <CommandBinding Command="{StaticResource GoLevel}" Executed="Game_GoLevel"/>
+        <CommandBinding Command="ApplicationCommands.Close" Executed="Close"/>
+        <CommandBinding Command="{StaticResource GetHelp}" Executed="Game_GetHelp"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Command="{StaticResource Restart}" Gesture="Ctrl+R"/>
+        <KeyBinding Command="{StaticResource Undo}" Gesture="Ctrl+Z"/>
+        <KeyBinding Command="{StaticResource GoPrev}" Gesture="Ctrl+P"/>
+        <KeyBinding Command="{StaticResource GoNext}" Gesture="Ctrl+N"/>
+        <KeyBinding Command="{StaticResource GoLevel}" Gesture="Ctrl+S"/>
+        <KeyBinding Command="{StaticResource GoDir}" Key="Left" CommandParameter="{x:Static local:Direction.Left}"/>
+        <KeyBinding Command="{StaticResource GoDir}" Key="Up" CommandParameter="{x:Static local:Direction.Top}"/>
+        <KeyBinding Command="{StaticResource GoDir}" Key="Right" CommandParameter="{x:Static local:Direction.Right}"/>
+        <KeyBinding Command="{StaticResource GoDir}" Key="Down" CommandParameter="{x:Static local:Direction.Bottom}"/>
+        <KeyBinding Command="{StaticResource GetHelp}" Key="F1"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="操作(_C)">
+                <MenuItem Header="重新开始(_R)" Command="{StaticResource Restart}" InputGestureText="Ctrl+R"/>
+                <MenuItem Header="撤销(_U)" Command="{StaticResource Undo}" InputGestureText="Ctrl+Z"/>
+                <MenuItem Header="上一关(_P)" Command="{StaticResource GoPrev}" InputGestureText="Ctrl+P"/>
+                <MenuItem Header="下一关(_N)" Command="{StaticResource GoNext}" InputGestureText="Ctrl+N"/>
+                <Separator/>
+                <MenuItem Header="选择关卡(_S)" Command="{StaticResource GoLevel}" InputGestureText="Ctrl+S"/>
+                <Separator/>
+                <MenuItem Header="退出(_X)" Command="ApplicationCommands.Close" InputGestureText="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="帮助(_H)">
+                <MenuItem Header="获取帮助(_H)" Command="{StaticResource GetHelp}" InputGestureText="F1"/>
+            </MenuItem>
+        </Menu>
+        <ToolBar Grid.Row="1">
+            <Button Command="{StaticResource Restart}">
+                <Button.Content>
+                    <Image Source="bmrestart.bmp"/>
+                </Button.Content>
+            </Button>
+            <Button Command="{StaticResource Undo}">
+                <Button.Content>
+                    <Image Source="bmundo.bmp"/>
+                </Button.Content>
+            </Button>
+            <Button Command="{StaticResource GoPrev}">
+                <Button.Content>
+                    <Image Source="bmprev.bmp"/>
+                </Button.Content>
+            </Button>
+            <Button Command="{StaticResource GoNext}">
+                <Button.Content>
+                    <Image Source="bmnext.bmp"/>
+                </Button.Content>
+            </Button>
+            <Button Command="{StaticResource GoLevel}">
+                <Button.Content>
+                    <Image Source="bmset.bmp"/>
+                </Button.Content>
+            </Button>
+        </ToolBar>
+        <local:BoxView x:Name="MainView" Grid.Row="2"/>
+    </Grid>
+</Window>
