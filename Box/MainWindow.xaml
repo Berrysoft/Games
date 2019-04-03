@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Box"
         mc:Ignorable="d"
-        Title="推箱子" Height="600" Width="600" WindowStartupLocation="CenterScreen">
+        Title="推箱子" Icon="box.ico" Height="600" Width="600" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <RoutedCommand x:Key="Restart"/>
         <RoutedCommand x:Key="GoDir"/>
@@ -14,12 +14,6 @@
         <RoutedCommand x:Key="GoNext"/>
         <RoutedCommand x:Key="GoLevel"/>
         <RoutedCommand x:Key="GetHelp"/>
-
-        <Image x:Key="RestartIcon" Source="bmrestart.png"/>
-        <Image x:Key="UndoIcon" Source="bmundo.png"/>
-        <Image x:Key="GoPrevIcon" Source="bmprev.png"/>
-        <Image x:Key="GoNextIcon" Source="bmnext.png"/>
-        <Image x:Key="GoLevelIcon" Source="bmset.png"/>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource Restart}" Executed="Game_Restart"/>
@@ -51,26 +45,65 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="操作(_C)">
-                <MenuItem Header="重新开始(_R)" Command="{StaticResource Restart}" InputGestureText="Ctrl+R"/>
-                <MenuItem Header="撤销(_U)" Command="{StaticResource Undo}" InputGestureText="Ctrl+Z" />
-                <MenuItem Header="上一关(_P)" Command="{StaticResource GoPrev}" InputGestureText="Ctrl+P"/>
-                <MenuItem Header="下一关(_N)" Command="{StaticResource GoNext}" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="重新开始(_R)" Command="{StaticResource Restart}" InputGestureText="Ctrl+R">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource RestartIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="撤销(_U)" Command="{StaticResource Undo}" InputGestureText="Ctrl+Z">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource UndoIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="选择关卡(_S)" Command="{StaticResource GoLevel}" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="上一关(_P)" Command="{StaticResource GoPrev}" InputGestureText="Ctrl+P">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource GoPrevIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="下一关(_N)" Command="{StaticResource GoNext}" InputGestureText="Ctrl+N">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource GoNextIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="选择关卡(_S)" Command="{StaticResource GoLevel}" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource GoLevelIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="退出(_X)" Command="ApplicationCommands.Close" InputGestureText="Alt+F4"/>
+                <MenuItem Header="退出(_X)" Command="ApplicationCommands.Close" InputGestureText="Alt+F4">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource CloseIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="帮助(_H)">
-                <MenuItem Header="获取帮助(_H)" Command="{StaticResource GetHelp}" InputGestureText="F1"/>
+                <MenuItem Header="获取帮助(_H)" Command="{StaticResource GetHelp}" InputGestureText="F1">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource HelpIcon}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
-        <ToolBar Grid.Row="1">
-            <Button Command="{StaticResource Restart}" Content="{StaticResource RestartIcon}"/>
-            <Button Command="{StaticResource Undo}" Content="{StaticResource UndoIcon}"/>
-            <Button Command="{StaticResource GoPrev}" Content="{StaticResource GoPrevIcon}"/>
-            <Button Command="{StaticResource GoNext}" Content="{StaticResource GoNextIcon}"/>
-            <Button Command="{StaticResource GoLevel}" Content="{StaticResource GoLevelIcon}"/>
+        <ToolBar Grid.Row="1" Height="32">
+            <Button Command="{StaticResource Restart}" ToolTip="重新开始">
+                <Image Source="{StaticResource RestartIcon}"/>
+            </Button>
+            <Button Command="{StaticResource Undo}" ToolTip="撤销">
+                <Image Source="{StaticResource UndoIcon}"/>
+            </Button>
+            <Separator/>
+            <Button Command="{StaticResource GoPrev}" ToolTip="上一关">
+                <Image Source="{StaticResource GoPrevIcon}"/>
+            </Button>
+            <Button Command="{StaticResource GoNext}" ToolTip="下一关">
+                <Image Source="{StaticResource GoNextIcon}"/>
+            </Button>
+            <Button Command="{StaticResource GoLevel}" ToolTip="选择关卡">
+                <Image Source="{StaticResource GoLevelIcon}"/>
+            </Button>
         </ToolBar>
-        <local:BoxView x:Name="MainView" Grid.Row="2" LevelPassed="MainView_LevelPassed" LevelChanged="MainView_LevelChanged"/>
+        <local:BoxView x:Name="MainView" Grid.Row="2" LevelPassed="MainView_LevelPassed" LevelChanged="MainView_LevelChanged" Cursor="box.cur"/>
     </Grid>
 </Window>

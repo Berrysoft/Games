@@ -4,6 +4,12 @@
     xmlns:local="clr-namespace:Box"
     StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+        <BitmapImage x:Key="RestartIcon" UriSource="bmreset.png"/>
+        <BitmapImage x:Key="UndoIcon" UriSource="bmundo.png"/>
+        <BitmapImage x:Key="GoPrevIcon" UriSource="bmleft.png"/>
+        <BitmapImage x:Key="GoNextIcon" UriSource="bmright.png"/>
+        <BitmapImage x:Key="GoLevelIcon" UriSource="bmsettings.png"/>
+        <BitmapImage x:Key="CloseIcon" UriSource="bmclose.png"/>
+        <BitmapImage x:Key="HelpIcon" UriSource="bmhelp.png"/>
     </Application.Resources>
 </Application>

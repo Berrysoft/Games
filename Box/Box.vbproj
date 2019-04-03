@@ -168,13 +168,20 @@
     <Resource Include="box.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="bmnext.png" />
+    <Resource Include="bmclose.png" />
+    <Resource Include="bmhelp.png" />
+    <Resource Include="bmleft.png" />
+    <Resource Include="bmreset.png" />
+    <Resource Include="bmright.png" />
+    <Resource Include="bmsettings.png" />
+    <Resource Include="bmundo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="bmprev.png" />
-    <Resource Include="bmrestart.png" />
-    <Resource Include="bmset.png" />
-    <Resource Include="bmundo.png" />
+    <Resource Include="box.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="help.ico" />
+    <Resource Include="set.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

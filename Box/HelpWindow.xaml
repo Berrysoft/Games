@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Box"
         mc:Ignorable="d"
-        Title="帮助" Height="220" Width="200" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+        Title="帮助" Height="220" Width="200" Icon="help.ico" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,11 +13,11 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Margin="10" HorizontalAlignment="Center" xml:space="preserve">方向键控制蓝色方块移动
 橙色代表箱子，红色代表终点
-重新开始&#x09;Ctrl+R
-撤销&#x09;&#x09;Ctrl+Z
-上一关&#x09;&#x09;Ctrl+P
-下一关&#x09;&#x09;Ctrl+N
-选择关卡&#x09;Ctrl+S</TextBlock>
-        <Button Grid.Row="1" Margin="10" HorizontalAlignment="Right" Width="80" IsDefault="True" IsCancel="True">确定(_O)</Button>
+<Image Source="{StaticResource RestartIcon}" Width="10"/> 重新开始&#x09;Ctrl+R
+<Image Source="{StaticResource UndoIcon}" Width="10"/> 撤销&#x09;&#x09;Ctrl+Z
+<Image Source="{StaticResource GoPrevIcon}" Width="10"/> 上一关&#x09;Ctrl+P
+<Image Source="{StaticResource GoNextIcon}" Width="10"/> 下一关&#x09;Ctrl+N
+<Image Source="{StaticResource GoLevelIcon}" Width="10"/> 选择关卡&#x09;Ctrl+S</TextBlock>
+        <Button Grid.Row="1" Margin="10" HorizontalAlignment="Right" Width="80" Height="25" IsDefault="True" IsCancel="True">确定(_O)</Button>
     </Grid>
 </Window>
