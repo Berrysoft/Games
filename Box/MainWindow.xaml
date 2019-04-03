@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Box"
         mc:Ignorable="d"
-        Title="推箱子" Icon="box.ico" Height="600" Width="600" WindowStartupLocation="CenterScreen">
+        Title="推箱子" Icon="box.ico" MinWidth="200" MinHeight="150" Height="600" Width="600" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <RoutedCommand x:Key="Restart"/>
         <RoutedCommand x:Key="GoDir"/>
