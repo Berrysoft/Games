@@ -128,7 +128,7 @@ Class MainWindow
         End If
         If path IsNot Nothing Then
             Using dc As DrawingContext = pathVisual.RenderOpen
-                For i = 0 To path.Count - 1
+                For i = path.Count - 1 To 0 Step -1
                     If path(i).Value.X = current.X AndAlso path(i).Value.Y = current.Y Then
                         Exit For
                     End If
@@ -158,26 +158,26 @@ Class MainWindow
         End If
         If AtEnd(current) Then Return Nothing
         Dim i As Integer = 0
-        For j = path.Count - 1 To 0 Step -1
+        For j = 0 To path.Count - 1
             If path(j).Value.X = current.X AndAlso path(j).Value.Y = current.Y Then
                 i = j
                 Exit For
             End If
         Next
-        If i = path.Count - 1 Then
+        If i = 0 Then
             If path(i).Count > 2 Then
-                Return path(i - 1).Value
+                Return path(i + 1).Value
             Else
-                i -= 1
+                i += 1
             End If
         End If
-        Do While i >= 0
+        Do While i < path.Count
             If path(i).Count > 1 Then
-                Return path(i - 1).Value
+                Return path(i + 1).Value
             End If
-            i -= 1
+            i += 1
         Loop
-        Return path(0).Value
+        Return path(path.Count - 1).Value
     End Function
 
     Private Sub DrawTip(dc As DrawingContext, point As IntPoint)
@@ -186,16 +186,16 @@ Class MainWindow
 
     Private drawTipsIndex As Integer
     Private Sub DrawTips()
-        If drawTipsIndex < 0 Then
+        If drawTipsIndex >= path.Count Then
             Timer.Stop()
-            drawTipsIndex = path.Count - 1
+            drawTipsIndex = 0
             Return
         End If
         If path IsNot Nothing Then
             Dim point = path(drawTipsIndex).Value
             current = point
             DrawCurrent(False)
-            drawTipsIndex -= 1
+            drawTipsIndex += 1
         End If
     End Sub
 
@@ -208,7 +208,7 @@ Class MainWindow
     Private Sub GeneratePath()
         Dim graph = maze.ToGraph
         Dim tree = graph.ToDFSTree(current)
-        For Each item In tree.AsDFSEnumerable.WithPath
+        For Each item In tree.AsDFSWithPath
             Dim node = item.Node
             If node.Value.X = maze.Width - 1 AndAlso node.Value.Y = maze.Height - 1 Then
                 path = item.Path
@@ -226,7 +226,7 @@ Class MainWindow
                 GeneratePath()
             End If
             GeneratePath()
-            drawTipsIndex = path.Count - 1
+            drawTipsIndex = 0
             Timer.Start()
         End If
     End Sub

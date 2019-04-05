@@ -1,6 +1,8 @@
-﻿Class Application
+﻿Imports System.Windows.Markup
 
-    ' 应用程序级事件(例如 Startup、Exit 和 DispatcherUnhandledException)
-    ' 可以在此文件中进行处理。
-
+Class Application
+    ' https://github.com/dotnet/wpf/issues/500
+    Private Sub IComponentConnector_InitializeComponent() Implements IComponentConnector.InitializeComponent
+        InitializeComponent()
+    End Sub
 End Class

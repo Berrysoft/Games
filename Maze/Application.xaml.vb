@@ -1,10 +1,6 @@
 ﻿Imports System.IO
 
 Class Application
-    Public Sub New()
-        InitializeComponent()
-    End Sub
-
     Public Shared Sub Main(args() As String)
         Dim app As New Application
         Dim win As MainWindow
