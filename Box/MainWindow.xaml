@@ -26,10 +26,10 @@
         <CommandBinding Command="{StaticResource GetHelp}" Executed="Game_GetHelp"/>
     </Window.CommandBindings>
     <Window.InputBindings>
-        <KeyBinding Command="{StaticResource Restart}" Gesture="Ctrl+R"/>
+        <KeyBinding Command="{StaticResource Restart}" Key="F5"/>
         <KeyBinding Command="{StaticResource Undo}" Gesture="Ctrl+Z"/>
-        <KeyBinding Command="{StaticResource GoPrev}" Gesture="Ctrl+P"/>
-        <KeyBinding Command="{StaticResource GoNext}" Gesture="Ctrl+N"/>
+        <KeyBinding Command="{StaticResource GoPrev}" Gesture="Ctrl+Left"/>
+        <KeyBinding Command="{StaticResource GoNext}" Gesture="Ctrl+Right"/>
         <KeyBinding Command="{StaticResource GoLevel}" Gesture="Ctrl+S"/>
         <KeyBinding Command="{StaticResource GoDir}" Key="Left" CommandParameter="{x:Static local:Direction.Left}"/>
         <KeyBinding Command="{StaticResource GoDir}" Key="Up" CommandParameter="{x:Static local:Direction.Top}"/>
@@ -45,7 +45,7 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="操作(_C)">
-                <MenuItem Header="重新开始(_R)" Command="{StaticResource Restart}" InputGestureText="Ctrl+R">
+                <MenuItem Header="重新开始(_R)" Command="{StaticResource Restart}" InputGestureText="F5">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource RestartIcon}"/>
                     </MenuItem.Icon>
@@ -56,12 +56,12 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="上一关(_P)" Command="{StaticResource GoPrev}" InputGestureText="Ctrl+P">
+                <MenuItem Header="上一关(_P)" Command="{StaticResource GoPrev}" InputGestureText="Ctrl+←">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource GoPrevIcon}"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="下一关(_N)" Command="{StaticResource GoNext}" InputGestureText="Ctrl+N">
+                <MenuItem Header="下一关(_N)" Command="{StaticResource GoNext}" InputGestureText="Ctrl+→">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource GoNextIcon}"/>
                     </MenuItem.Icon>

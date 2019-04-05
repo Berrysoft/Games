@@ -9,15 +9,40 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Margin="10" HorizontalAlignment="Center" xml:space="preserve">方向键控制蓝色方块移动
-橙色代表箱子，红色代表终点
-<Image Source="{StaticResource RestartIcon}" Width="12"/> 重新开始&#x09;Ctrl+R
-<Image Source="{StaticResource UndoIcon}" Width="12"/> 撤销&#x09;&#x09;Ctrl+Z
-<Image Source="{StaticResource GoPrevIcon}" Width="12"/> 上一关&#x09;Ctrl+P
-<Image Source="{StaticResource GoNextIcon}" Width="12"/> 下一关&#x09;Ctrl+N
-<Image Source="{StaticResource GoLevelIcon}" Width="12"/> 选择关卡&#x09;Ctrl+S</TextBlock>
-        <Button Grid.Row="1" Margin="10" HorizontalAlignment="Right" Width="80" Height="25" IsDefault="True" IsCancel="True">确定(_O)</Button>
+        <TextBlock Grid.Row="0" Margin="10" HorizontalAlignment="Center">
+            方向键或鼠标控制<Run Foreground="DeepSkyBlue">蓝色圆圈</Run>移动
+            <LineBreak/>
+            <Run Foreground="Orange">橙色方块</Run>代表箱子
+            <LineBreak/>
+            <Run Foreground="PaleVioletRed">粉色方块</Run>代表终点
+            <LineBreak/>
+            <Run Foreground="Gray">灰色方块</Run>代表墙壁
+        </TextBlock>
+        <ListView Grid.Row="1" Margin="10,0">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Icon}" Width="12"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="命令" DisplayMemberBinding="{Binding Text}"/>
+                    <GridViewColumn Header="快捷键" DisplayMemberBinding="{Binding GestureText}"/>
+                </GridView>
+            </ListView.View>
+            <local:CommandGestureItem Icon="{StaticResource RestartIcon}" Text="重新开始" GestureText="F5"/>
+            <local:CommandGestureItem Icon="{StaticResource UndoIcon}" Text="撤销" GestureText="Ctrl+Z"/>
+            <local:CommandGestureItem Icon="{StaticResource GoPrevIcon}" Text="上一关" GestureText="Ctrl+←"/>
+            <local:CommandGestureItem Icon="{StaticResource GoNextIcon}" Text="下一关" GestureText="Ctrl+→"/>
+            <local:CommandGestureItem Icon="{StaticResource GoLevelIcon}" Text="选择关卡" GestureText="Ctrl+S"/>
+            <local:CommandGestureItem Icon="{StaticResource CloseIcon}" Text="退出" GestureText="Alt+F4"/>
+            <local:CommandGestureItem Icon="{StaticResource HelpIcon}" Text="获取帮助" GestureText="F1"/>
+        </ListView>
+        <Button Grid.Row="2" Margin="10" HorizontalAlignment="Right" Width="80" Height="25" IsDefault="True" IsCancel="True">确定(_O)</Button>
     </Grid>
 </Window>
