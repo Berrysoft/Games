@@ -123,9 +123,9 @@ Class LevelMap
         End If
     End Sub
 
-    Public ReadOnly Property CanUndo As Boolean
+    Public ReadOnly Property StepsCount As Integer
         Get
-            Return steps.Count > 0
+            Return steps.Count
         End Get
     End Property
 End Class

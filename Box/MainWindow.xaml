@@ -86,7 +86,7 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <ToolBar Grid.Row="1" Height="32">
+        <ToolBar Grid.Row="1" Height="28">
             <Button Command="{StaticResource Restart}" ToolTip="重新开始">
                 <Image Source="{StaticResource RestartIcon}"/>
             </Button>
@@ -104,6 +104,6 @@
                 <Image Source="{StaticResource GoLevelIcon}"/>
             </Button>
         </ToolBar>
-        <local:BoxView x:Name="MainView" Grid.Row="2" LevelPassed="MainView_LevelPassed" LevelChanged="MainView_LevelChanged" Cursor="box.cur"/>
+        <local:BoxView x:Name="MainView" Grid.Row="2" LevelPassed="MainView_LevelPassed" Stepped="MainView_Stepped" Cursor="box.cur"/>
     </Grid>
 </Window>

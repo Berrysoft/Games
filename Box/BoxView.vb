@@ -12,6 +12,7 @@ Class BoxView
     Private off As Vector
 
     Private mapVisual As New DrawingVisual
+    Private boxVisual As New DrawingVisual
     Private bodyVisual As New DrawingVisual
 
     Private maps As New List(Of LevelMap)
@@ -19,6 +20,7 @@ Class BoxView
 
     Public Sub New()
         AddVisualChild(mapVisual)
+        AddVisualChild(boxVisual)
         AddVisualChild(bodyVisual)
     End Sub
 
@@ -59,19 +61,29 @@ Class BoxView
     End Sub
 
     Public Event LevelPassed As EventHandler(Of Integer)
+    Private Sub RaiseLevelPassed()
+        RaiseEvent LevelPassed(Me, Level)
+    End Sub
+
+    Public Event Stepped As EventHandler(Of Integer)
+    Private Sub RaiseStepped()
+        RaiseEvent Stepped(Me, currentMap.StepsCount)
+    End Sub
 
     Public Sub GoDir(dir As Direction)
         currentMap.GoDir(dir)
-        DrawAll()
+        DrawAllWithoutMap()
+        RaiseStepped()
         If currentMap.Map.AsEnumerable().All(Function(state) state <> SquareState.EndPoint) Then
-            RaiseEvent LevelPassed(Me, Level)
+            RaiseLevelPassed()
             GoNext()
         End If
     End Sub
 
     Public Sub Undo()
         currentMap.Undo()
-        DrawAll()
+        DrawAllWithoutMap()
+        RaiseStepped()
     End Sub
 
     Public ReadOnly Property Level As Integer
@@ -81,8 +93,6 @@ Class BoxView
             Return maps.Count
         End Get
     End Property
-
-    Public Event LevelChanged As EventHandler(Of Integer)
 
     Public Sub GoPrev()
         GoLevel(Level - 1)
@@ -98,18 +108,18 @@ Class BoxView
         _Level = index
         BoxView_SizeChanged()
         DrawAll()
-        RaiseEvent LevelChanged(Me, Level)
+        RaiseStepped()
     End Sub
 
     Public ReadOnly Property CanUndo As Boolean
         Get
-            Return currentMap.CanUndo
+            Return currentMap.StepsCount > 0
         End Get
     End Property
 
     Protected Overrides ReadOnly Property VisualChildrenCount As Integer
         Get
-            Return 2
+            Return 3
         End Get
     End Property
 
@@ -118,6 +128,8 @@ Class BoxView
             Case 0
                 Return mapVisual
             Case 1
+                Return boxVisual
+            Case 2
                 Return bodyVisual
             Case Else
                 Throw New IndexOutOfRangeException()
@@ -126,6 +138,12 @@ Class BoxView
 
     Private Sub DrawAll()
         DrawMap()
+        DrawBox()
+        DrawBody()
+    End Sub
+
+    Private Sub DrawAllWithoutMap()
+        DrawBox()
         DrawBody()
     End Sub
 
@@ -148,10 +166,23 @@ Class BoxView
                             If state And SquareState.EndPoint Then
                                 dc.DrawRoundedRectangle(Brushes.Red, BorderPen, New Rect(p.ToPoint(times) + off, rectsize), roundr, roundr)
                             End If
-                            If state And SquareState.Box Then
-                                dc.DrawRoundedRectangle(Brushes.Orange, BorderPen, New Rect(p.ToPoint(times) + off, rectsize), roundr, roundr)
-                            End If
                     End Select
+                Next
+            Next
+        End Using
+    End Sub
+
+    Private Sub DrawBox()
+        Dim roundr = times / 8
+        Dim rectsize As New Size(times, times)
+        Dim maxx = currentMap.Map.GetLength(0)
+        Dim maxy = currentMap.Map.GetLength(1)
+        Using dc As DrawingContext = boxVisual.RenderOpen()
+            For i = 0 To maxx - 1
+                For j = 0 To maxy - 1
+                    If currentMap.Map(i, j) And SquareState.Box Then
+                        dc.DrawRoundedRectangle(Brushes.Orange, BorderPen, New Rect(New IntPoint(i, j).ToPoint(times) + off, rectsize), roundr, roundr)
+                    End If
                 Next
             Next
         End Using

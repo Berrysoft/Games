@@ -54,10 +54,14 @@
     End Sub
 
     Private Sub MainView_LevelPassed(sender As Object, e As Integer)
-        MessageBox.Show("恭喜过关！")
+        MessageBox.Show("恭喜过关！", "推箱子")
     End Sub
 
-    Private Sub MainView_LevelChanged(sender As Object, e As Integer)
-        Me.Title = $"推箱子 - 第{e + 1}关"
+    Private Sub MainView_Stepped(sender As Object, e As Integer)
+        If e > 0 Then
+            Me.Title = $"推箱子 - 第{MainView.Level + 1}关 - {e}步"
+        Else
+            Me.Title = $"推箱子 - 第{MainView.Level + 1}关"
+        End If
     End Sub
 End Class
