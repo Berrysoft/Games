@@ -5,11 +5,12 @@
     <RootNamespace>Box</RootNamespace>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>box.ico</ApplicationIcon>
+    <ApplicationIcon>biglogo.ico</ApplicationIcon>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="biglogo.ico" />
     <None Remove="bmclose.png" />
     <None Remove="bmhelp.png" />
     <None Remove="bmleft.png" />
@@ -40,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="biglogo.ico" />
     <Resource Include="bmclose.png" />
     <Resource Include="bmhelp.png" />
     <Resource Include="bmleft.png" />

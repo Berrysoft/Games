@@ -7,6 +7,12 @@ Class BoxView
 
     Private Shared ReadOnly NoBorderPen As New Pen(Brushes.Transparent, 0)
     Private Shared ReadOnly BorderPen As New Pen(Brushes.Black, 1)
+    Private Shared ReadOnly RoadBrush As Brush = Brushes.LightGoldenrodYellow
+    Private Shared ReadOnly WallBrush As Brush = Brushes.Gray
+    Private Shared ReadOnly WallPinBrush As Brush = Brushes.Transparent
+    Private Shared ReadOnly EndPointBrush As Brush = Brushes.PaleVioletRed
+    Private Shared ReadOnly BoxBrush As Brush = Brushes.Orange
+    Private Shared ReadOnly BodyBrush As Brush = Brushes.DeepSkyBlue
 
     Private times As Double
     Private off As Vector
@@ -153,18 +159,21 @@ Class BoxView
         Dim maxx = currentMap.Map.GetLength(0)
         Dim maxy = currentMap.Map.GetLength(1)
         Using dc As DrawingContext = mapVisual.RenderOpen()
-            dc.DrawRectangle(Brushes.Yellow, NoBorderPen, New Rect(CType(off, Point), New IntPoint(maxx, maxy).ToSize(times)))
+            dc.DrawRectangle(RoadBrush, NoBorderPen, New Rect(CType(off, Point), New IntPoint(maxx, maxy).ToSize(times)))
             For i = 0 To maxx - 1
                 For j = 0 To maxy - 1
                     Dim state = currentMap.Map(i, j)
                     Dim p = New IntPoint(i, j)
                     Select Case state
-                        Case SquareState.Road
                         Case SquareState.Wall
-                            dc.DrawRoundedRectangle(Brushes.Gray, BorderPen, New Rect(p.ToPoint(times) + off, rectsize), roundr, roundr)
+                            dc.DrawRoundedRectangle(WallBrush, BorderPen, New Rect(p.ToPoint(times) + off, rectsize), roundr, roundr)
+                            dc.DrawEllipse(WallPinBrush, BorderPen, p.ToPoint(times) + New Vector(roundr, roundr) + off, 1, 1)
+                            dc.DrawEllipse(WallPinBrush, BorderPen, p.ToPoint(times) + New Vector(times - roundr, roundr) + off, 1, 1)
+                            dc.DrawEllipse(WallPinBrush, BorderPen, p.ToPoint(times) + New Vector(roundr, times - roundr) + off, 1, 1)
+                            dc.DrawEllipse(WallPinBrush, BorderPen, p.ToPoint(times) + New Vector(times - roundr, times - roundr) + off, 1, 1)
                         Case Else
                             If state And SquareState.EndPoint Then
-                                dc.DrawRoundedRectangle(Brushes.Red, BorderPen, New Rect(p.ToPoint(times) + off, rectsize), roundr, roundr)
+                                dc.DrawRoundedRectangle(EndPointBrush, BorderPen, New Rect(p.ToPoint(times) + off, rectsize), roundr, roundr)
                             End If
                     End Select
                 Next
@@ -181,7 +190,7 @@ Class BoxView
             For i = 0 To maxx - 1
                 For j = 0 To maxy - 1
                     If currentMap.Map(i, j) And SquareState.Box Then
-                        dc.DrawRoundedRectangle(Brushes.Orange, BorderPen, New Rect(New IntPoint(i, j).ToPoint(times) + off, rectsize), roundr, roundr)
+                        dc.DrawRoundedRectangle(BoxBrush, BorderPen, New Rect(New IntPoint(i, j).ToPoint(times) + off, rectsize), roundr, roundr)
                     End If
                 Next
             Next
@@ -191,7 +200,7 @@ Class BoxView
     Private Sub DrawBody()
         Dim r = times / 2
         Using dc As DrawingContext = bodyVisual.RenderOpen()
-            dc.DrawEllipse(Brushes.DeepSkyBlue, BorderPen, currentMap.Body.ToPoint(times) + New Vector(r, r) + off, r, r)
+            dc.DrawEllipse(BodyBrush, BorderPen, currentMap.Body.ToPoint(times) + New Vector(r, r) + off, r, r)
         End Using
     End Sub
 
