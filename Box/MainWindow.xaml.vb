@@ -7,6 +7,10 @@
         MainView.Undo()
     End Sub
 
+    Private Sub Game_Redo()
+        MainView.Redo()
+    End Sub
+
     Private Sub Game_GoPrev()
         MainView.GoPrev()
     End Sub
@@ -38,6 +42,12 @@
     Private Sub Game_CanUndo(sender As Object, e As CanExecuteRoutedEventArgs)
         If MainView IsNot Nothing Then
             e.CanExecute = MainView.CanUndo
+        End If
+    End Sub
+
+    Private Sub Game_CanRedo(sender As Object, e As CanExecuteRoutedEventArgs)
+        If MainView IsNot Nothing Then
+            e.CanExecute = MainView.CanRedo
         End If
     End Sub
 

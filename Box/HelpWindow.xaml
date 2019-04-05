@@ -37,6 +37,7 @@
             </ListView.View>
             <local:CommandGestureItem Icon="{StaticResource RestartIcon}" Text="重新开始" GestureText="F5"/>
             <local:CommandGestureItem Icon="{StaticResource UndoIcon}" Text="撤销" GestureText="Ctrl+Z"/>
+            <local:CommandGestureItem Icon="{StaticResource RedoIcon}" Text="恢复" GestureText="Ctrl+Y"/>
             <local:CommandGestureItem Icon="{StaticResource GoPrevIcon}" Text="上一关" GestureText="Ctrl+←"/>
             <local:CommandGestureItem Icon="{StaticResource GoNextIcon}" Text="下一关" GestureText="Ctrl+→"/>
             <local:CommandGestureItem Icon="{StaticResource GoLevelIcon}" Text="选择关卡" GestureText="Ctrl+S"/>

@@ -36,6 +36,7 @@ Class LevelMap
     Implements ICloneable
 
     Private steps As Stack(Of [Step])
+    Private rsteps As Stack(Of [Step])
 
     Public ReadOnly Property Body As IntPoint
     Public ReadOnly Property Map As SquareState(,)
@@ -53,6 +54,7 @@ Class LevelMap
         Dim newlevel As LevelMap = MemberwiseClone()
         newlevel._Map = _Map.Clone()
         newlevel.steps = New Stack(Of [Step])()
+        newlevel.rsteps = New Stack(Of [Step])()
         Return newlevel
     End Function
 
@@ -60,6 +62,7 @@ Class LevelMap
         Dim r = GoDirIntrnal(dir)
         If r.HasValue Then
             steps.Push(New [Step] With {.Dir = dir, .MoveBox = r.Value})
+            rsteps.Clear()
         End If
     End Sub
 
@@ -120,12 +123,28 @@ Class LevelMap
                 Map(boldb.X, boldb.Y) = Map(boldb.X, boldb.Y) And (Not SquareState.Box)
                 Map(oldb.X, oldb.Y) = Map(oldb.X, oldb.Y) Or SquareState.Box
             End If
+            rsteps.Push(st)
+        End If
+    End Sub
+
+    Public Sub Redo()
+        If rsteps.Count > 0 Then
+            Dim st As [Step] = rsteps.Pop()
+            Dim oldb = Body
+            GoDirIntrnal(st.Dir)
+            steps.Push(st)
         End If
     End Sub
 
     Public ReadOnly Property StepsCount As Integer
         Get
             Return steps.Count
+        End Get
+    End Property
+
+    Public ReadOnly Property RedoStepsCount As Integer
+        Get
+            Return rsteps.Count
         End Get
     End Property
 End Class

@@ -92,6 +92,12 @@ Class BoxView
         RaiseStepped()
     End Sub
 
+    Public Sub Redo()
+        currentMap.Redo()
+        DrawAllWithoutMap()
+        RaiseStepped()
+    End Sub
+
     Public ReadOnly Property Level As Integer
 
     Public ReadOnly Property MaxLevel As Integer
@@ -120,6 +126,12 @@ Class BoxView
     Public ReadOnly Property CanUndo As Boolean
         Get
             Return currentMap.StepsCount > 0
+        End Get
+    End Property
+
+    Public ReadOnly Property CanRedo As Boolean
+        Get
+            Return currentMap.RedoStepsCount > 0
         End Get
     End Property
 

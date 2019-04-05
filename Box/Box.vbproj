@@ -14,6 +14,7 @@
     <None Remove="bmclose.png" />
     <None Remove="bmhelp.png" />
     <None Remove="bmleft.png" />
+    <None Remove="bmredo.png" />
     <None Remove="bmreset.png" />
     <None Remove="bmright.png" />
     <None Remove="bmsettings.png" />
@@ -45,6 +46,7 @@
     <Resource Include="bmclose.png" />
     <Resource Include="bmhelp.png" />
     <Resource Include="bmleft.png" />
+    <Resource Include="bmredo.png" />
     <Resource Include="bmreset.png" />
     <Resource Include="bmright.png" />
     <Resource Include="bmsettings.png" />

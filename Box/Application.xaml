@@ -6,6 +6,7 @@
     <Application.Resources>
         <BitmapImage x:Key="RestartIcon" UriSource="bmreset.png"/>
         <BitmapImage x:Key="UndoIcon" UriSource="bmundo.png"/>
+        <BitmapImage x:Key="RedoIcon" UriSource="bmredo.png"/>
         <BitmapImage x:Key="GoPrevIcon" UriSource="bmleft.png"/>
         <BitmapImage x:Key="GoNextIcon" UriSource="bmright.png"/>
         <BitmapImage x:Key="GoLevelIcon" UriSource="bmsettings.png"/>
