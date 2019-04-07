@@ -1,8 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.Runtime.InteropServices
-Imports System.Windows
 Imports System.Windows.Interop
-Imports System.Windows.Media
 
 Public Module WindowHelper
     Private Declare Auto Function GetClientRect Lib "user32.dll" (hWnd As IntPtr, ByRef lpRECT As tagRECT) As Integer
