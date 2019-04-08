@@ -50,46 +50,46 @@
             <MenuItem Header="操作(_C)">
                 <MenuItem Header="重新开始(_R)" Command="{StaticResource Restart}" InputGestureText="F5">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource RestartIcon}"/>
+                        <Image Source="{StaticResource RestartIcon}" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="撤销(_U)" Command="{StaticResource Undo}" InputGestureText="Ctrl+Z">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource UndoIcon}"/>
+                        <Image Source="{StaticResource UndoIcon}" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="恢复(_E)" Command="{StaticResource Redo}" InputGestureText="Ctrl+Y">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource RedoIcon}"/>
+                        <Image Source="{StaticResource RedoIcon}" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="上一关(_P)" Command="{StaticResource GoPrev}" InputGestureText="Ctrl+←">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource GoPrevIcon}"/>
+                        <Image Source="{StaticResource GoPrevIcon}" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="下一关(_N)" Command="{StaticResource GoNext}" InputGestureText="Ctrl+→">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource GoNextIcon}"/>
+                        <Image Source="{StaticResource GoNextIcon}" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="选择关卡(_S)" Command="{StaticResource GoLevel}" InputGestureText="Ctrl+S">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource GoLevelIcon}"/>
+                        <Image Source="{StaticResource GoLevelIcon}" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="退出(_X)" Command="ApplicationCommands.Close" InputGestureText="Alt+F4">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource CloseIcon}"/>
+                        <Image Source="{StaticResource CloseIcon}" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="帮助(_H)">
                 <MenuItem Header="获取帮助(_H)" Command="{StaticResource GetHelp}" InputGestureText="F1">
                     <MenuItem.Icon>
-                        <Image Source="{StaticResource HelpIcon}"/>
+                        <Image Source="{StaticResource HelpIcon}" Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
