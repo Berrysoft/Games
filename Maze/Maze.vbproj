@@ -5,7 +5,18 @@
     <RootNamespace>Maze</RootNamespace>
     <TargetFrameworks>netcoreapp3.0;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
+    <StartupObject>Maze.Program</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Page Remove="Application.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="Application.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
 
   <ItemGroup>
     <Import Include="System.Windows" />
@@ -28,10 +39,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net48'">
-    <Reference Include="PresentationCore"/>
-    <Reference Include="PresentationFramework"/>
-    <Reference Include="WindowsBase"/>
-    <Reference Include="System.Xaml"/>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xaml" />
   </ItemGroup>
 
 </Project>
