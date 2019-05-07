@@ -38,13 +38,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Walterlv.FluentDesign" Version="0.2.0-alpha" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GamesHelper\GamesHelper.vbproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net48'">
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Xaml" />
   </ItemGroup>
