@@ -38,10 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Walterlv.FluentDesign" Version="0.2.0-alpha" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GamesHelper\GamesHelper.vbproj" />
   </ItemGroup>
 

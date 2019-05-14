@@ -1,17 +1,11 @@
 ﻿<Window x:Class="MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:themes="clr-namespace:Walterlv.Themes;assembly=Walterlv.FluentDesign"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Box"
-        mc:Ignorable="d" Style="{StaticResource Style.Window.Universal}"
+        mc:Ignorable="d"
         Title="推箱子" Icon="box.ico" MinWidth="200" MinHeight="150" Height="600" Width="600" WindowStartupLocation="CenterScreen">
-    <themes:UniversalWindowStyle.TitleBar>
-        <themes:UniversalTitleBar ForegroundColor="Black" InactiveForegroundColor="White"
-                                  ButtonHoverForeground="White" ButtonHoverBackground="#3FFFFFFF"
-                                  ButtonPressedForeground="White" ButtonPressedBackground="#3F000000"/>
-    </themes:UniversalWindowStyle.TitleBar>
     <Window.Resources>
         <RoutedCommand x:Key="Restart"/>
         <RoutedCommand x:Key="GoDir"/>
@@ -46,7 +40,7 @@
         <KeyBinding Command="{StaticResource GoDir}" Key="Down" CommandParameter="{x:Static local:Direction.Bottom}"/>
         <KeyBinding Command="{StaticResource GetHelp}" Key="F1"/>
     </Window.InputBindings>
-    <Grid Margin="0,32,0,0">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>

@@ -6,7 +6,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Walterlv.FluentDesign, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null;component\Themes/Window.Universal.xaml"/>
                 <ResourceDictionary Source="Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
