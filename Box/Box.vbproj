@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Box</RootNamespace>
-    <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+    <TargetFrameworks>netcoreapp5.0;netcoreapp3.1;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>biglogo.ico</ApplicationIcon>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
@@ -61,6 +61,10 @@
     <None Update="levels.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="mscorlib" Condition="'$(TargetFramework)' == 'net48'"/>
   </ItemGroup>
 
 </Project>
