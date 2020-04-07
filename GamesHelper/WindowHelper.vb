@@ -3,10 +3,10 @@ Imports System.Runtime.InteropServices
 Imports System.Windows.Interop
 
 Public Module WindowHelper
-    Private Declare Auto Function GetClientRect Lib "user32.dll" (hWnd As IntPtr, ByRef lpRECT As tagRECT) As Integer
+    Private Declare Auto Function GetClientRect Lib "user32.dll" (hWnd As IntPtr, ByRef lpRECT As RECT) As Integer
 
-    Private Function GetClientRect(wnd As Window) As tagRECT
-        Dim r As tagRECT
+    Private Function GetClientRect(wnd As Window) As RECT
+        Dim r As RECT
         If GetClientRect(New WindowInteropHelper(wnd).Handle, r) = 0 Then
             Throw New Win32Exception
         End If
@@ -21,7 +21,7 @@ Public Module WindowHelper
 End Module
 
 <StructLayout(LayoutKind.Sequential)>
-Structure tagRECT
+Structure RECT
     Public Left As Integer
     Public Top As Integer
     Public Right As Integer

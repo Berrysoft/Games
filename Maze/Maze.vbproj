@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Maze</RootNamespace>
-    <TargetFrameworks>netcoreapp3.0;net48</TargetFrameworks>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>Maze.Program</StartupObject>
   </PropertyGroup>
@@ -21,18 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Berrysoft.Data" Version="1.1.208-preview3" />
+    <PackageReference Include="Berrysoft.Data" Version="1.1.226" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GamesHelper\GamesHelper.vbproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="System.Xaml" />
   </ItemGroup>
 
 </Project>
