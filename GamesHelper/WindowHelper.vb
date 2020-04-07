@@ -11,7 +11,11 @@ Public Module WindowHelper
 
     Private Sub CheckHResult(result As Integer)
         If result <> 0 Then
+#If NETCOREAPP Then
             Throw New Exception() With {.HResult = result}
+#Else
+            Throw New HResultException(result)
+#End If
         End If
     End Sub
 
@@ -93,3 +97,13 @@ Public Enum PreferredAppMode
     ForceDark
     ForceLight
 End Enum
+
+#If Not NETCOREAPP Then
+Class HResultException
+    Inherits Exception
+
+    Public Sub New(value As Integer)
+        HResult = value
+    End Sub
+End Class
+#End If

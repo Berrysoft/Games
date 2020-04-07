@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Square</RootNamespace>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
