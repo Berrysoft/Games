@@ -356,6 +356,9 @@ Class MainWindow
         If maze Is Nothing Then
             CreateMaze()
         End If
+        If IsDarkModeEnabledForApp() Then
+            SetWindowDarkMode(Me)
+        End If
     End Sub
 End Class
 

@@ -244,6 +244,12 @@ Class MainWindow
         ClearRow()
     End Sub
 
+    Private Sub MainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        If IsDarkModeEnabledForApp() Then
+            SetWindowDarkMode(Me)
+        End If
+    End Sub
+
     Private Sub MainWindow_SizeChanged(sender As Object, e As SizeChangedEventArgs) Handles Me.SizeChanged
         Dim s = GetClientSizeWithDpi(Me, squareVisual)
         times = Math.Min(s.Width / MAX_WIDTH, s.Height / MAX_HEIGHT)

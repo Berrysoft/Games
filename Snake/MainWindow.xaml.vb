@@ -256,7 +256,9 @@ Class MainWindow
 
     Private Sub MainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         InitGame()
-        SetWindowDarkMode(Me)
+        If IsDarkModeEnabledForApp() Then
+            SetWindowDarkMode(Me)
+        End If
     End Sub
 
     Private Sub MainWindow_SizeChanged(sender As Object, e As SizeChangedEventArgs) Handles Me.SizeChanged

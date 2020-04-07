@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Include="Application.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GamesHelper\GamesHelper.vbproj" />
   </ItemGroup>
 
