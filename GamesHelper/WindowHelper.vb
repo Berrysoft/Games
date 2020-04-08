@@ -35,7 +35,7 @@ Public Module WindowHelper
 
     Private Declare Unicode Function SendMessageW Lib "user32.dll" (hWnd As IntPtr, Msg As UInteger, wParam As IntPtr, lParam As IntPtr) As <MarshalAs(UnmanagedType.SysUInt)> IntPtr
 
-    Private Declare Auto Sub RtlGetNtVersionNumbers Lib "ntdll.dll" (ByRef major As UInteger, ByRef minor As UInteger, ByRef build As UInteger)
+    Private Declare Auto Sub RtlGetNtVersionNumbers Lib "ntdll.dll" (major As IntPtr, minor As IntPtr, ByRef build As UInteger)
 
     Private Declare Auto Function DwmSetWindowAttribute Lib "dwmapi.dll" (hWnd As IntPtr, dwAttribute As UInteger, <MarshalAs(UnmanagedType.Bool)> ByRef pvAttribute As Boolean, cbAttribute As UInteger) As Integer
 
@@ -43,17 +43,22 @@ Public Module WindowHelper
     Private Declare Auto Function AllowDarkModeForApp Lib "Uxtheme.dll" Alias "#135" (<MarshalAs(UnmanagedType.Bool)> value As Boolean) As <MarshalAs(UnmanagedType.Bool)> Boolean
     Private Declare Auto Function SetPreferredAppMode Lib "Uxtheme.dll" Alias "#135" (value As PREFERRED_APP_MODE) As PREFERRED_APP_MODE
     Private Declare Auto Sub FlushMenuThemes Lib "Uxtheme.dll" Alias "#136" ()
+    Private Declare Auto Function ShouldSystemUseDarkMode Lib "Uxtheme.dll" Alias "#138" () As <MarshalAs(UnmanagedType.Bool)> Boolean
     Private Declare Auto Function IsDarkModeAllowedForApp Lib "Uxtheme.dll" Alias "#139" () As <MarshalAs(UnmanagedType.Bool)> Boolean
 
+    Private Function GetSystemBuild() As UInteger
+        Dim build As UInteger
+        RtlGetNtVersionNumbers(0, 0, build)
+        Return build And (Not &HF0000000UI)
+    End Function
+
     Private Function IsDarkModeExists() As Boolean
-        Dim major, minor, build As UInteger
-        RtlGetNtVersionNumbers(major, minor, build)
-        Return build >= 17763
+        Return GetSystemBuild() >= 17763UI
     End Function
 
     Public Sub SetApplicationPreferredMode(mode As PreferredAppMode)
         If IsDarkModeExists() Then
-            If Environment.OSVersion.Version.Build < 18362 Then
+            If GetSystemBuild() < 18362UI Then
                 AllowDarkModeForApp(mode = PREFERRED_APP_MODE.ALLOW_DARK OrElse mode = PREFERRED_APP_MODE.FORCE_DARK)
             Else
                 SetPreferredAppMode(mode)
@@ -62,14 +67,14 @@ Public Module WindowHelper
     End Sub
 
     Public Function IsDarkModeEnabledForApp() As Boolean
-        Return IsDarkModeExists() AndAlso ShouldAppUseDarkMode() AndAlso IsDarkModeAllowedForApp()
+        Return IsDarkModeExists() AndAlso If(GetSystemBuild() < 18362UI, ShouldAppUseDarkMode(), ShouldSystemUseDarkMode()) AndAlso IsDarkModeAllowedForApp()
     End Function
 
     Public Sub SetWindowDarkMode(wnd As Window)
         If IsDarkModeExists() Then
             Dim helper As New WindowInteropHelper(wnd)
-            CheckHResult(DwmSetWindowAttribute(helper.Handle, &H14, True, 4))
-            SendMessageW(helper.Handle, &H31A, 0, 0)
+            CheckHResult(DwmSetWindowAttribute(helper.Handle, &H14UI, True, 4))
+            SendMessageW(helper.Handle, &H31AUI, 0, 0)
             FlushMenuThemes()
             wnd.Height += 1 'A trick to refresh window for dark mode
         End If
