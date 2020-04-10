@@ -9,16 +9,6 @@ Public Module WindowHelper
         End If
     End Sub
 
-    Private Sub CheckHResult(result As Integer)
-        If result <> 0 Then
-#If NETCOREAPP Then
-            Throw New Exception() With {.HResult = result}
-#Else
-            Throw New HResultException(result)
-#End If
-        End If
-    End Sub
-
     Private Declare Auto Function GetClientRect Lib "user32.dll" (hWnd As IntPtr, ByRef lpRECT As RECT) As Integer
 
     Private Function GetClientRect(wnd As Window) As RECT
@@ -33,18 +23,13 @@ Public Module WindowHelper
         Return New Size((r.Right - r.Left) / dpi.DpiScaleX, (r.Bottom - r.Top) / dpi.DpiScaleY)
     End Function
 
-    Private Declare Unicode Function SendMessageW Lib "user32.dll" (hWnd As IntPtr, Msg As UInteger, wParam As IntPtr, lParam As IntPtr) As <MarshalAs(UnmanagedType.SysUInt)> IntPtr
-
     Private Declare Auto Sub RtlGetNtVersionNumbers Lib "ntdll.dll" (major As IntPtr, minor As IntPtr, ByRef build As UInteger)
 
     Private Declare Auto Function DwmSetWindowAttribute Lib "dwmapi.dll" (hWnd As IntPtr, dwAttribute As UInteger, <MarshalAs(UnmanagedType.Bool)> ByRef pvAttribute As Boolean, cbAttribute As UInteger) As Integer
 
-    Private Declare Auto Function ShouldAppUseDarkMode Lib "Uxtheme.dll" Alias "#132" () As <MarshalAs(UnmanagedType.Bool)> Boolean
-    Private Declare Auto Function AllowDarkModeForApp Lib "Uxtheme.dll" Alias "#135" (<MarshalAs(UnmanagedType.Bool)> value As Boolean) As <MarshalAs(UnmanagedType.Bool)> Boolean
-    Private Declare Auto Function SetPreferredAppMode Lib "Uxtheme.dll" Alias "#135" (value As PREFERRED_APP_MODE) As PREFERRED_APP_MODE
-    Private Declare Auto Sub FlushMenuThemes Lib "Uxtheme.dll" Alias "#136" ()
-    Private Declare Auto Function ShouldSystemUseDarkMode Lib "Uxtheme.dll" Alias "#138" () As <MarshalAs(UnmanagedType.Bool)> Boolean
-    Private Declare Auto Function IsDarkModeAllowedForApp Lib "Uxtheme.dll" Alias "#139" () As <MarshalAs(UnmanagedType.Bool)> Boolean
+    Private Declare Auto Function ShouldAppsUseDarkMode Lib "Uxtheme.dll" Alias "#132" () As <MarshalAs(UnmanagedType.I1)> Boolean
+    Private Declare Auto Function AllowDarkModeForApp Lib "Uxtheme.dll" Alias "#135" (<MarshalAs(UnmanagedType.I1)> value As Boolean) As <MarshalAs(UnmanagedType.I1)> Boolean
+    Private Declare Auto Function SetPreferredAppMode Lib "Uxtheme.dll" Alias "#135" (value As PreferredAppMode) As PreferredAppMode
 
     Private Function GetSystemBuild() As UInteger
         Dim build As UInteger
@@ -59,7 +44,7 @@ Public Module WindowHelper
     Public Sub SetApplicationPreferredMode(mode As PreferredAppMode)
         If IsDarkModeExists() Then
             If GetSystemBuild() < 18362UI Then
-                AllowDarkModeForApp(mode = PREFERRED_APP_MODE.ALLOW_DARK OrElse mode = PREFERRED_APP_MODE.FORCE_DARK)
+                AllowDarkModeForApp(mode = PreferredAppMode.AllowDark OrElse mode = PreferredAppMode.ForceDark)
             Else
                 SetPreferredAppMode(mode)
             End If
@@ -67,15 +52,15 @@ Public Module WindowHelper
     End Sub
 
     Public Function IsDarkModeEnabledForApp() As Boolean
-        Return IsDarkModeExists() AndAlso If(GetSystemBuild() < 18362UI, ShouldAppUseDarkMode(), ShouldSystemUseDarkMode()) AndAlso IsDarkModeAllowedForApp()
+        Return IsDarkModeExists() AndAlso ShouldAppsUseDarkMode()
     End Function
 
     Public Sub SetWindowDarkMode(wnd As Window)
         If IsDarkModeExists() Then
             Dim helper As New WindowInteropHelper(wnd)
-            CheckHResult(DwmSetWindowAttribute(helper.Handle, &H14UI, True, 4))
-            SendMessageW(helper.Handle, &H31AUI, 0, 0)
-            FlushMenuThemes()
+            If DwmSetWindowAttribute(helper.Handle, &H14UI, IsDarkModeEnabledForApp(), 4) <> 0 Then
+                DwmSetWindowAttribute(helper.Handle, &H13UI, IsDarkModeEnabledForApp(), 4)
+            End If
             wnd.Height += 1 'A trick to refresh window for dark mode
         End If
     End Sub
@@ -89,26 +74,9 @@ Structure RECT
     Public Bottom As Integer
 End Structure
 
-Enum PREFERRED_APP_MODE As Integer
-    [DEFAULT]
-    ALLOW_DARK
-    FORCE_DARK
-    FORCE_LIGHT
-End Enum
-
-Public Enum PreferredAppMode
+Public Enum PreferredAppMode As Integer
     DefaultMode
     AllowDark
     ForceDark
     ForceLight
 End Enum
-
-#If Not NETCOREAPP Then
-Class HResultException
-    Inherits Exception
-
-    Public Sub New(value As Integer)
-        HResult = value
-    End Sub
-End Class
-#End If
