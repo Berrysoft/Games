@@ -61,9 +61,21 @@ Class MainWindow
             End Sub)
     End Sub
 
+    Private Shared ReadOnly NoBorderPen As New Pen(Brushes.Transparent, 0)
+
+    Private Sub DrawBackground(dc As DrawingContext)
+        If Not IsDarkModeEnabledForApp() Then
+            Dim s = GetClientSizeWithDpi(Me, visual)
+            dc.DrawRectangle(Brushes.White, NoBorderPen, New Rect(0, 0, s.Width, s.Height))
+        End If
+    End Sub
+
     Private ReadOnly CreatingText As New FormattedText("正在生成...", Threading.Thread.CurrentThread.CurrentCulture, FlowDirection.LeftToRight, New Typeface("Microsoft Tahei UI"), 40, Brushes.Yellow, 1)
     Private Sub DrawCreating()
         Using dc As DrawingContext = visual.RenderOpen
+            DrawBackground(dc)
+            Dim dark = IsDarkModeEnabledForApp()
+            CreatingText.SetForegroundBrush(If(dark, Brushes.Yellow, Brushes.Orange))
             dc.DrawText(CreatingText, New Point((realWidth - CreatingText.Width) / 2, (realHeight - CreatingText.Height) / 2) + off)
         End Using
         bodyVisual.RenderOpen().Close()
@@ -71,11 +83,14 @@ Class MainWindow
     End Sub
 
     Private Const Offset As Integer = 20
+    Private Shared ReadOnly LightWallPen As New Pen(New SolidColorBrush(Color.FromRgb(31, 31, 31)), 2)
     Private Shared ReadOnly WallPen As New Pen(Brushes.WhiteSmoke, 2)
     Private Sub DrawMaze()
+        Dim dark = IsDarkModeEnabledForApp()
         Using dc As DrawingContext = visual.RenderOpen
-            dc.DrawLine(WallPen, off, New IntPoint(maze.Width, 0).ToPoint(times) + off)
-            dc.DrawLine(WallPen, New IntPoint(0, 1).ToPoint(times) + off, New IntPoint(0, maze.Height).ToPoint(times) + off)
+            DrawBackground(dc)
+            dc.DrawLine(If(dark, WallPen, LightWallPen), off, New IntPoint(maze.Width, 0).ToPoint(times) + off)
+            dc.DrawLine(If(dark, WallPen, LightWallPen), New IntPoint(0, 1).ToPoint(times) + off, New IntPoint(0, maze.Height).ToPoint(times) + off)
             For x = 0 To maze.Width - 1
                 For y = 0 To maze.Height - 1
                     Select Case maze(x, y)
@@ -97,10 +112,11 @@ Class MainWindow
     End Sub
 
     Private Sub DrawWall(dc As DrawingContext, x As Integer, y As Integer, right As Boolean)
+        Dim dark = IsDarkModeEnabledForApp()
         If right Then
-            dc.DrawLine(WallPen, New IntPoint(x + 1, y).ToPoint(times) + off, New IntPoint(x + 1, y + 1).ToPoint(times) + off)
+            dc.DrawLine(If(dark, WallPen, LightWallPen), New IntPoint(x + 1, y).ToPoint(times) + off, New IntPoint(x + 1, y + 1).ToPoint(times) + off)
         Else
-            dc.DrawLine(WallPen, New IntPoint(x, y + 1).ToPoint(times) + off, New IntPoint(x + 1, y + 1).ToPoint(times) + off)
+            dc.DrawLine(If(dark, WallPen, LightWallPen), New IntPoint(x, y + 1).ToPoint(times) + off, New IntPoint(x + 1, y + 1).ToPoint(times) + off)
         End If
     End Sub
 
@@ -201,6 +217,8 @@ Class MainWindow
 
     Private ReadOnly Body As New FormattedText("膜", Threading.Thread.CurrentThread.CurrentCulture, FlowDirection.LeftToRight, New Typeface("Microsoft Tahei UI"), 10, Brushes.Yellow, 1)
     Private Sub DrawBody(dc As DrawingContext, point As IntPoint)
+        Dim dark = IsDarkModeEnabledForApp()
+        Body.SetForegroundBrush(If(dark, Brushes.Yellow, Brushes.Orange))
         dc.DrawText(Body, point.ToPoint(times) + New Vector(times / 10, times / 10) + off)
     End Sub
 

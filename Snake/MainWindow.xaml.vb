@@ -12,6 +12,7 @@ Class MainWindow
     Private Const CAPTION_TWO_PAUSE As String = "贪吃蛇 - 绿：{0} 蓝：{1} - 暂停"
     Private Const CAPTION_TWO_ENDED As String = "贪吃蛇 - 绿：{0} 蓝：{1} - 已结束"
     Private Shared ReadOnly NoBorderPen As New Pen(Brushes.Transparent, 0)
+    Private Shared ReadOnly LightBackgroundBrush As Brush = Brushes.WhiteSmoke
     Private Shared ReadOnly BackgroundBrush As New SolidColorBrush(Color.FromRgb(31, 31, 31))
     Private Shared ReadOnly Body As Brush = Brushes.Green
     Private Shared ReadOnly Head As Brush = Brushes.LightGreen
@@ -131,7 +132,13 @@ Class MainWindow
 
     Private Sub DrawBackground()
         Using dc = backVisual.RenderOpen()
-            dc.DrawRectangle(BackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+            If IsDarkModeEnabledForApp() Then
+                dc.DrawRectangle(BackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+            Else
+                Dim s = GetClientSizeWithDpi(Me, backVisual)
+                dc.DrawRectangle(Brushes.White, NoBorderPen, New Rect(0, 0, s.Width, s.Height))
+                dc.DrawRectangle(LightBackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+            End If
         End Using
     End Sub
 
@@ -256,9 +263,7 @@ Class MainWindow
 
     Private Sub MainWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         InitGame()
-        If IsDarkModeEnabledForApp() Then
-            SetWindowDarkMode(Me)
-        End If
+        SetWindowDarkMode(Me)
     End Sub
 
     Private Sub MainWindow_SizeChanged(sender As Object, e As SizeChangedEventArgs) Handles Me.SizeChanged

@@ -8,6 +8,7 @@ Class MainWindow
     Private Const MAX_HEIGHT As Integer = 360
     Private Const CAPTION As String = "{0} - 俄罗斯方块"
     Private Shared ReadOnly NoBorderPen As New Pen(Brushes.Transparent, 0)
+    Private Shared ReadOnly LightBackgroundBrush As Brush = Brushes.WhiteSmoke
     Private Shared ReadOnly BackgroundBrush As New SolidColorBrush(Color.FromRgb(31, 31, 31))
     Private Shared ReadOnly Cell As New IntPoint(CELLSIZE, CELLSIZE)
     Private Shared ReadOnly GoDown As New IntPoint(0, CELLSIZE)
@@ -16,6 +17,7 @@ Class MainWindow
     Private Shared ReadOnly Center As New IntPoint(MAX_WIDTH \ 2, -2 * CELLSIZE)
     Private Shared ReadOnly Patterns() As Pattern
     Private Shared ReadOnly FillBrush As Brush = Brushes.Green
+    Private Shared ReadOnly LightBorderPen As New Pen(Brushes.White, 1)
     Private Shared ReadOnly BorderPen As New Pen(Brushes.Black, 1)
     Private times As Double
     Private realWidth As Double
@@ -81,19 +83,27 @@ Class MainWindow
 #Region "Drawing"
     Private Sub DrawBackground()
         Using dc = backVisual.RenderOpen()
-            dc.DrawRectangle(BackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+            If IsDarkModeEnabledForApp() Then
+                dc.DrawRectangle(BackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+            Else
+                Dim s = GetClientSizeWithDpi(Me, backVisual)
+                dc.DrawRectangle(Brushes.White, NoBorderPen, New Rect(0, 0, s.Width, s.Height))
+                dc.DrawRectangle(LightBackgroundBrush, NoBorderPen, New Rect(off.X, off.Y, realWidth, realHeight))
+            End If
         End Using
     End Sub
     Private Sub DrawPattern(dc As DrawingContext, current As Pattern)
+        Dim dark = IsDarkModeEnabledForApp()
         For Each p In current.Points
-            dc.DrawRectangle(FillBrush, BorderPen, New Rect((current.Center + p).ToPoint(times) + off, Cell.ToSize(times)))
+            dc.DrawRectangle(FillBrush, If(dark, BorderPen, LightBorderPen), New Rect((current.Center + p).ToPoint(times) + off, Cell.ToSize(times)))
         Next
     End Sub
     Private Sub DrawGround(dc As DrawingContext, cells(,) As Boolean)
+        Dim dark = IsDarkModeEnabledForApp()
         For i = 0 To MAX_WIDTH \ CELLSIZE - 1
             For j = MAX_HEIGHT \ CELLSIZE - 1 To 0 Step -1
                 If cells(i, j) Then
-                    dc.DrawRectangle(FillBrush, BorderPen, New Rect((New IntPoint(i, j) * CELLSIZE).ToPoint(times) + off, Cell.ToSize(times)))
+                    dc.DrawRectangle(FillBrush, If(dark, BorderPen, LightBorderPen), New Rect((New IntPoint(i, j) * CELLSIZE).ToPoint(times) + off, Cell.ToSize(times)))
                 End If
             Next
         Next
@@ -132,7 +142,6 @@ Class MainWindow
         score = -1
         playing = True
         NewPattern()
-        DrawBackground()
         Timer.Start()
     End Sub
     Private Sub NewPattern()
