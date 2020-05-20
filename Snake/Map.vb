@@ -1,7 +1,7 @@
 ﻿Imports GamesHelper
 
 Class SnakeEatenException
-    Inherits Exception
+    Inherits ApplicationException
 End Class
 
 Class Map

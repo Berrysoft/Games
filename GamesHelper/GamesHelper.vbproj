@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp5.0;netcoreapp3.1;net48</TargetFrameworks>
+    <TargetFrameworks>net5.0;net48</TargetFrameworks>
     <RootNamespace>GamesHelper</RootNamespace>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
